@@ -1,0 +1,16 @@
+{
+    "name": "jyolo/mvcbuilder",
+    "description": "mvc code builder",
+    "authors": [
+        {
+            "name": "yolo",
+            "email": "438608613@qq.com"
+        }
+    ],
+    "license": "Apache-2.0",
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.6",
+        "jyolo/cmaker": "@dev"
+    }
+}

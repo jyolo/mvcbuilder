@@ -1,0 +1,69 @@
+.admin-login-block {
+    width: 100%;
+    max-width: 640px;
+    margin: 100px auto 0 auto;
+}
+.admin-login-text {
+    padding-top: 30px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 40px;
+    text-align: center;
+    width: 100%;
+}
+.admin-login-text span {
+    color: #5FB878;
+}
+.login-font {
+    font-size: 16px;
+    width: 100%;
+    color: #5e5e5e;
+    text-align: center;
+    padding: 20px 0;
+    padding-top: 10px;
+    margin: 10px auto;
+}
+.login-font span {
+    color: #fff;
+}
+.admin-login-form {
+    margin: 0 5rem;
+    width: 63.33333333%;
+}
+.layui-form-item .layui-input-inline {
+    margin-left: 0;
+    width: 70%;
+}
+
+.layui-form-item .captcha{
+    width: 30%;
+}
+.layui-form-item .verifyCodeImg {
+    width: 30%;
+
+}
+.layui-form-item .verifyCode {
+    width: 9.5rem;
+    margin-top: -8px;
+}
+
+.layui-form-item .layui-form-label{
+    width: 20%;
+}
+.admin-login-btn {
+    width: 100%;
+    background: #5FB878;
+}
+.admin-login-copy {
+    text-align: center;
+    color: #999;
+}
+
+.layui-form{
+    color: #fff;
+}
+
+
+.layui-bg-black, .layui-bg-blue, .layui-bg-cyan, .layui-bg-green, .layui-bg-orange, .layui-bg-red{
+    color:#2F4056!important;
+}
