@@ -6,11 +6,11 @@
  * Time: 10:55
  */
 
-namespace MvcBuilder\Driver\thinkphp5\Tpl\normal;
+namespace MvcBuilder\Driver\tp51\Tpl\normal;
 use CMaker\components\checkbox;
 use CMaker\Maker;
 use MvcBuilder\ComponentSettingMap;
-use MvcBuilder\Driver\thinkphp5\CommonReplacer;
+use MvcBuilder\Driver\tp51\CommonReplacer;
 use think\Exception;
 
 class Replacer extends CommonReplacer

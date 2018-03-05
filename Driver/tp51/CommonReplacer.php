@@ -4,7 +4,7 @@
  * Time: 13:58
  */
 
-namespace MvcBuilder\Driver\thinkphp5;
+namespace MvcBuilder\Driver\tp51;
 
 
 use MvcBuilder\CmakerSettingMap;

@@ -6,7 +6,7 @@
  * Time: 13:57
  */
 
-namespace MvcBuilder\Driver\thinkphp5;
+namespace MvcBuilder\Driver\tp51;
 
 
 use MvcBuilder\Core\ContentBuilder;

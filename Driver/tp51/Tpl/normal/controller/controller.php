@@ -10,7 +10,7 @@ namespace app\_module_name_\controller;
 
 use app\base\controller\Common;
 use app\_module_name_\model;
-use MvcBuilder\Driver\thinkphp5\Tpl\normal\Replacer;
+use MvcBuilder\Driver\tp51\Tpl\normal\Replacer;
 use think\facade\Request;
 
 

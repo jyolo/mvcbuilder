@@ -50,7 +50,7 @@ class MvcBuilderController extends BaseController {
     public function add(){
 
 
-        $tpl_plan = MvcBuilder::getTplPlan('thinkphp5');
+        $tpl_plan = MvcBuilder::getTplPlan('tp51');
 
         $this->assign('tpl_plan' ,$tpl_plan);
         return $this->fetch(__DIR__ . '/view/add.html');
@@ -107,7 +107,7 @@ class MvcBuilderController extends BaseController {
 
 
 
-        $tpl_plan = MvcBuilder::getTplPlan('thinkphp5');
+        $tpl_plan = MvcBuilder::getTplPlan('tp51');
 
         $this->assign('tpl_plan' ,$tpl_plan);
         $this->assign('models',$models);
