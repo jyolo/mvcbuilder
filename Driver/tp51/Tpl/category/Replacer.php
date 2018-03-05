@@ -6,7 +6,7 @@
  * Time: 10:55
  */
 
-namespace MvcBuilder\Driver\thinkphp5\Tpl\category;
+namespace MvcBuilder\Driver\tp51\Tpl\category;
 use CMaker\components\checkbox;
 use CMaker\Maker;
 use MvcBuilder\ComponentSettingMap;
