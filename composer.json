@@ -11,7 +11,7 @@
     "license": "Apache-2.0",
     "require": {
         "php": ">=5.6",
-        "jyolo/cmaker": ">=v1.5.*@dev"
+        "jyolo/cmaker": "v1.5.*@dev"
     },
     "autoload": {
         "psr-4": {
