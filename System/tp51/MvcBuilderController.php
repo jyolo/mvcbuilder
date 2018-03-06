@@ -1,5 +1,5 @@
 <?php
-namespace MvcBuilder\system\tp51;
+namespace MvcBuilder\System\tp51;
 use think\Controller;
 use think\facade\Request;
 use CMaker\Maker;

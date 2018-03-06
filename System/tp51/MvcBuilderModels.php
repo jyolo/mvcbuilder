@@ -6,7 +6,7 @@
  * Time: 11:07
  */
 
-namespace MvcBuilder\system\tp51;
+namespace MvcBuilder\System\tp51;
 
 
 use think\Model;
