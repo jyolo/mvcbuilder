@@ -16,9 +16,9 @@
     "autoload": {
         "psr-4": {
             "MvcBuilder\\":"Src/",
-            "Core\\":"Core/",
-            "Driver\\":"Driver/",
-            "System\\":"System/"
+            "MvcBuilder\\Core\\":"Core/",
+            "MvcBuilder\\Driver\\":"Driver/",
+            "MvcBuilder\\System\\":"System/"
         }
     }
 }
