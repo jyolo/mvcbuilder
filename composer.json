@@ -15,10 +15,10 @@
     },
     "autoload": {
         "psr-4": {
-            "MvcBuilder\\":"*",
-            "Core\\":"*",
-            "Driver\\":"*",
-            "system\\":"*"
+            "MvcBuilder\\":"src/",
+            "Core\\":"Core/",
+            "Driver\\":"Driver/",
+            "System\\":"System/"
         }
     }
 }
