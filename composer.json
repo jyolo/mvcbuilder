@@ -12,5 +12,13 @@
     "require": {
         "php": ">=5.6",
         "jyolo/cmaker": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "MvcBuilder\\":"*",
+            "Core\\":"*",
+            "Driver\\":"*",
+            "system\\":"*"
+        }
     }
 }
