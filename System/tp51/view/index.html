@@ -57,7 +57,7 @@
             ['field' => 'table_name','title' => '模型表','sort' => true ] ,
             ['field' => 'add_time','title' => '添加时间','sort' => true ] ,
             ['toolbar' => '#actionTpl' ,'title' => '操作','fixed' => 'right']
-            ])->page(true)->limit(10)->url($requseturl.'/index.html')->render()}
+            ])->page(true)->limit(10)->url(url($requseturl.'/index'))->render()}
 
             <script type="text/html" id="actionTpl" lay-filter="actionbar">
                 <div class="layui-btn-group">
