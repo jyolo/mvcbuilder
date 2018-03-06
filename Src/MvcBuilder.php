@@ -66,7 +66,7 @@ class MvcBuilder
     public static function getTplPlan($driver_name){
         $self = get_class();
 
-       
+
         $tpl_path = str_replace('\Src','',__DIR__) .'\Driver\\'.$driver_name.'\Tpl';
 
         //检查驱动是否继承了core 里面的driver
