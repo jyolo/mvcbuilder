@@ -6,22 +6,21 @@ use CMaker\Maker;
 use MvcBuilder\MvcBuilder;
 use MvcBuilder\MvcBuilderHelper;
 
-class MvcBuilderController extends BaseController {
+trait MvcBuilderController{
 
     protected static $models = null;
     protected static $models_component = null;
 
     protected function initialize()
     {
-
         self::$models = new MvcBuilderModels();
         self::$models_component = new MvcBuilderModelsComponent();
-        //p(Request::module());
-       // p(Request::controller());
-        //p(Request::action());
+
         $this->requseturl = Request::module() . '/' . Request::controller();
         $this->assign('requseturl',$this->requseturl);
     }
+
+
 
     /**
      * [menu]查看[/menu]
@@ -49,7 +48,6 @@ class MvcBuilderController extends BaseController {
      */
     public function add(){
 
-
         $tpl_plan = MvcBuilder::getTplPlan('tp51');
 
         $this->assign('tpl_plan' ,$tpl_plan);
@@ -68,8 +66,6 @@ class MvcBuilderController extends BaseController {
         $fields = self::$models_component->order('sorts asc')->where('models_id',$models['id'])->select()->toArray();
 
         $componet = '';
-
-
 
         foreach($fields as $k => $v){
 
@@ -105,8 +101,6 @@ class MvcBuilderController extends BaseController {
         }
 
 
-
-
         $tpl_plan = MvcBuilder::getTplPlan('tp51');
 
         $this->assign('tpl_plan' ,$tpl_plan);
@@ -127,15 +121,12 @@ class MvcBuilderController extends BaseController {
         //获取组件保存编辑之后的setting的值,如果有值的话 再次点击编辑 则默认 用setting创建组件
         $setting = (isset($param['setting']) ) ? $param['setting'] : false;
 
-
-
         $MvcBuilderHelper = new MvcBuilderHelper(trim($param['component_name']) ,$setting);
 
         //检查编辑的组件 是否允许 在 MvcBuilder 中使用
         if(!$MvcBuilderHelper->check_allowed_component(trim($param['component_name'])))throw new \ErrorException('该组件不允许在MvcBuilder中使用');
         //获取组件的设置选项
         $setting_dom = $MvcBuilderHelper->set;
-
 
 
         //设置项 提交的地址
@@ -212,14 +203,6 @@ class MvcBuilderController extends BaseController {
 
             $this->error($e->getMessage());
         }
-
-
-
-
-
-
-
-
 
 
     }
@@ -383,5 +366,35 @@ class MvcBuilderController extends BaseController {
 
         return $group;
 
+    }
+
+
+
+    /**
+     * 重写 返回封装后的API数据到客户端
+     * @access protected
+     * @param  mixed     $data 要返回的数据
+     * @param  integer   $code 返回的code
+     * @param  mixed     $msg 提示信息
+     * @param  string    $type 返回数据格式
+     * @param  array     $header 发送的Header信息
+     * @return void
+     */
+    protected function result($data,$code = 0, $msg = '', $type = '', array $header = [])
+    {
+        $count = $data['count'];
+        unset($data['count']);
+        $result = [
+            'code' => $code,
+            'count' => $count,
+            'msg'  => $msg,
+            'time' => time(),
+            'data' => $data,
+        ];
+
+        $type     = $type ?: $this->getResponseType();
+        $response = Response::create($result, $type)->header($header);
+
+        throw new HttpResponseException($response);
     }
 }
