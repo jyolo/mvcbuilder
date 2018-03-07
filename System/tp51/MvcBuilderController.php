@@ -1,7 +1,18 @@
 <?php
+// +----------------------------------------------------------------------
+// | jyolo/mvcbuilder
+// +----------------------------------------------------------------------
+// | Copyright (c) 2018-2028 http://i3tp.cn All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// +----------------------------------------------------------------------
+// | Author: jyolo <364851534@qq.com>
+// +----------------------------------------------------------------------
 namespace MvcBuilder\System\tp51;
 use think\Controller;
 use think\facade\Request;
+use think\Response;
+use think\exception\HttpResponseException;
 use CMaker\Maker;
 use MvcBuilder\MvcBuilder;
 use MvcBuilder\MvcBuilderHelper;
