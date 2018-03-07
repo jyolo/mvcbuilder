@@ -37,14 +37,15 @@ class _models_en_name_ extends Common
             $post['limit'] = (isset($post['limit'])) ? $post['limit'] : 10;
 
             $where = '';
-            if(isset($post['where']))$where = parseWhere($post['where']);
+            if(isset($post['where']))$where = _parseWhere($post['where']);
 
             $model = new model\_models_en_name_();
 
-            $list = $model->where($where)->page($post['page'],$post['limit'])->select()->toArray();
-            $list['count'] = $model->where($where)->count();
+            $return['data'] = $model->where($where)->page($post['page'],$post['limit'])->select()->toArray();
+            $return['count'] = $model->where($where)->count();
+            $return['code'] = 0;
 
-            result($list);
+            return json($return);
 
         }
 

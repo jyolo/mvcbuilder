@@ -33,7 +33,7 @@ class _models_en_name_ extends Common
 
         if(Request::isPost()){
             $post = input('post.');
-            $model = new model\ArticleCategory();
+            $model = new model\_models_en_name_();
 
             if(isset($post['relation_field']) && strlen($post['relation_field'])){
 
@@ -48,7 +48,7 @@ class _models_en_name_ extends Common
                         $model = $model->where('','exp','instr(path ,"'.$pid.'")');
                         unset($post['where'][$relation_field[1]]);
                     }
-                    $where = parseWhere($post['where']);
+                    $where = _parseWhere($post['where']);
                     $model = $model->where($where);
                 }
 
@@ -62,7 +62,7 @@ class _models_en_name_ extends Common
                 $list = Component::tree_to_array($list,$config['field'],true);
 
                 sort($list);
-                $return = [];
+                $return['data'] = [];
                 foreach($list as $k => $v){
                     if($k == 0 && $v[$relation_field[1]] == 0 ){
                         $pid = explode(',',trim($v['path'],','));
@@ -70,14 +70,17 @@ class _models_en_name_ extends Common
                     }
 
                     unset($v['son']);
-                    $return[] = $v;
+                    $return['data'][] = $v;
                 }
-
+                $return['code'] = 0;
                 $return['count'] = count($list);
 
-                result($return);
+                return json($return);
             }else{
-                result([],'0','缺少relation_field参数');
+                $return['code'] = 1;
+                $return['data'] = [];
+                $return['error_msg'] = '缺少relation_field参数';
+                return json($return);
             }
 
 

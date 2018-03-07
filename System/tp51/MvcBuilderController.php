@@ -36,9 +36,10 @@ trait MvcBuilderController{
         if(Request::isPost()){
             $post = input('post.');
 
-            $list = self::$models->getList($post);
-            $list['count'] = self::$models->count();
-            $this->result($list);
+            $return['data'] = self::$models->getList($post);
+            $return['count'] = self::$models->count();
+            $return['code'] = 0;
+            return json($return);
 
         }
 
@@ -275,12 +276,33 @@ trait MvcBuilderController{
      *[menu]生成模型[/menu]
      */
     public function build(){
+        $models = self::$models->select()->toArray();
+        $this->assign('models' ,$models);
+        return $this->fetch(__DIR__ . '/view/build.html');
+    }
+
+    /**
+     *[menu]执行生成模型[/menu]
+     */
+    public function build_action(){
         $post = input('post.');
-        if(!isset($post['ids']))$this->error('请先选择模型');
 
-        $build_url = url($this->requseturl.'/build_page',['mid' => join(',',$post['ids'])]);
+        //$flag = $this->validate($post,'Module');
+        //if(!isset($post['models_id']))$this->error('请选择右侧模型');
 
-        $this->result($build_url);
+
+        $MvcBuilder = MvcBuilder::init('tp51' ,$post);
+
+        //创建目录地图
+        $foldermap = $MvcBuilder->makeFolderMap();
+
+        //生成文件
+        $MvcBuilder->buildFile($foldermap);
+
+        //p($a);
+
+        die();
+
     }
 
     /**
@@ -384,31 +406,4 @@ trait MvcBuilderController{
 
 
 
-    /**
-     * 重写 返回封装后的API数据到客户端
-     * @access protected
-     * @param  mixed     $data 要返回的数据
-     * @param  integer   $code 返回的code
-     * @param  mixed     $msg 提示信息
-     * @param  string    $type 返回数据格式
-     * @param  array     $header 发送的Header信息
-     * @return void
-     */
-    protected function result($data,$code = 0, $msg = '', $type = '', array $header = [])
-    {
-        $count = isset($data['count']) ?$data['count'] : 0;
-        if(isset($data['count']))unset($data['count']);
-        $result = [
-            'code' => $code,
-            'count' => $count,
-            'msg'  => $msg,
-            'time' => time(),
-            'data' => $data,
-        ];
-
-        $type     = $type ?: $this->getResponseType();
-        $response = Response::create($result, $type)->header($header);
-
-        throw new HttpResponseException($response);
-    }
 }

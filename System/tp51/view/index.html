@@ -25,15 +25,18 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <div class="layui-input-inline">
-                            <button class="layui-btn lay-submit">
-                                <i class="layui-icon">&#xe615;</i> 搜索
-                            </button>
-                        </div>
+                        <button class="layui-btn lay-submit">
+                            <i class="layui-icon">&#xe615;</i> 搜索
+                        </button>
+                        <button class="layui-btn link" data-type="page" data-url="{:url($requseturl.'/build')}" >
+                            生成MVC
+                        </button>
                     </div>
                 </div>
             </form>
+
         </blockquote>
+
     </fieldset>
 
     <form class="layui-form layui-form-pane" action="" method="post" lay-filter="list-table">
@@ -41,9 +44,7 @@
             <button class="layui-btn" lay-submit data-url="{:url($requseturl.'/pdel')}" data-call-back="table_pdel">
                 批量删除
             </button>
-            <button class="layui-btn" lay-submit data-url="{:url($requseturl.'/build')}" data-call-back="open_builder_mvc_page">
-                生成MVC
-            </button>
+
 
             <button class="layui-btn link" data-type="page" data-url="{:url($requseturl.'/add')}" style="float: right">
                 添加
@@ -73,9 +74,7 @@
             <button class="layui-btn" lay-submit data-url="{:url($requseturl.'/pdel')}" data-call-back="table_pdel">
                 批量删除
             </button>
-            <button class="layui-btn link" data-type="page" data-url="{:url($requseturl.'/build')}" data-call-back="table_pdel">
-                生成MVC
-            </button>
+
 
             <button class="layui-btn link" data-type="page" data-url="{:url($requseturl.'/add')}" style="float: right">
                 添加
@@ -88,11 +87,6 @@
 <script type="text/javascript" src="/static/plugin/lay-extend-module/config.js"></script>
 
 
-<script>
-    function open_builder_mvc_page(msg) {
-        p(msg);
-    }
-</script>
 
 {:CMakerJs('all')}
 

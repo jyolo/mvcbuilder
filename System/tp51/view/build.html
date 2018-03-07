@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>首页 · 后台模板 HTML</title>
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="/static/image/code.png">
+
+</head>
+<body class="body">
+
+<div class="layui-layout">
+    <form class="layui-form " action="{:url($requseturl.'/build_action')}" method="post" lay-filter="search">
+        <fieldset class="layui-elem-field" >
+            <legend>模块基本信息</legend>
+            <div class="layui-field-box" >
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">模块中文名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="module_name" lay-verify="required"  placeholder="模型中文名称">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">模块英文名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="file_name" lay-verify="required"  placeholder="模型英文名称">
+                    </div>
+                </div>
+                {:CMaker('radio')->label('生成权限菜单')->name('build_menu')->option(['否','是'])->choose(0)->render()}
+                {:CMaker('text')->label('icon图标')->name('icon')->render()}
+
+            </div>
+        </fieldset>
+
+
+
+        <fieldset class="layui-elem-field" style="width: 58%;float: left;">
+            <legend>模型排序</legend>
+            <div class="layui-field-box dragula" style="min-height: 300px;padding:10px;">
+
+            </div>
+        </fieldset>
+
+
+        <fieldset class="layui-elem-field "  style="width: 38%;float: right;">
+            <legend>选择模型</legend>
+
+            <div class="layui-tab layui-tab-brief  dragula" lay-filter="component" style="padding:10px;">
+                {foreach $models as $k => $vo}
+                <blockquote class="layui-elem-quote" data="{$vo.id}">{$vo.models_name}</blockquote>
+                {/foreach}
+            </div>
+
+        </fieldset>
+
+
+        <div class="layui-form-item" style="margin-left: 36%">
+            <div class="layui-input-inline ">
+                <button class="layui-btn"  lay-submit>提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+<script type="text/javascript" src="__PLUGIN_PATH__/layui/layui.js"></script>
+<script type="text/javascript" src="__PLUGIN_PATH__/lay-extend-module/config.js"></script>
+<link rel="stylesheet" href="__PLUGIN_PATH__/dragula/dist/dragula.min.css">
+<script src="__PLUGIN_PATH__/dragula/dist/dragula.min.js"></script>
+<script>
+    layui.use(['element','form'],function () {
+        var $ = layui.jquery;
+        var drake ;
+
+        drake = dragula({
+            removeOnSpill:true,
+            copy: function (el, source) {
+                //复制的来源不是第一个容器
+                return source !== this.containers[0];
+            },
+            accepts: function (el, target) {
+                //接收复制的容器为第一个容器
+                return target === this.containers[0];
+            },
+        });
+        //压入容器
+        $('.dragula').each(function (i,n) {
+            drake.containers.push(n);
+        });
+        drake.on('cloned',function(clone,from,type){
+            var style = $(clone).attr('style');
+            if(typeof style == "undefined") return ;
+            //fixed 组件层级问题
+            style += 'z-index:999999999999999999 !important;background-color:#009688';
+            $(clone).attr('style',style);
+            //来源如果已经拖拽过来了，则加上灰色的class
+
+
+
+        });
+        drake.on('drop',function (el, target, source) {
+            var models_id = $(el).attr('data');
+            var models_name = $(el).html();
+            if($(this.containers[0]).find('.models_'+models_id).length > 0){
+                layer.msg(models_name +'已存在');
+                $(el).remove();
+            }
+            if(source != this.containers[0]){
+                $(el).append('<input class="models_'+models_id+'" type="hidden" name="models_id[]" value="'+models_id+'">');
+                $(el).append('<input  type="hidden" name="form_order[]" value="">');
+            }
+
+            //每次拖拽改变form-order hidden 的index值
+            $(this.containers[0]).find('.layui-form-item').each(function(i,n){
+
+                var index = $(n).index();
+
+                $(n).find('input[type=hidden]').each(function(si,sn){
+                    var newname = $(sn).attr('name').replace(/\[\d?\]/,'['+index+']');
+                    $(sn).attr('name',newname);
+                    if(newname.match(/form_order/)){
+                        $(sn).attr('value',index);
+                    }
+                });
+            });
+
+
+        });
+        //删除组件的时候也同时改变form-order hidden 的index值
+        drake.on('remove',function (el, container, source) {
+            var componet = new Array;
+            $(this.containers[0]).find('.layui-form-item').each(function(i,n){
+                var index = $(n).index();
+                $(n).find('input[type=hidden]').each(function(i,n){
+                    var newname = $(n).attr('name').replace(/[\d+]/,index);
+                    $(n).attr('name',newname);
+                    if(newname.match(/form_order/)){
+                        $(n).attr('value',index);
+                    }
+                });
+            })
+
+        });
+
+
+        //组件设置表单提交成功时候的回调函数
+        function save_component(msg) {
+
+            if(msg.code == 1){
+
+                var componnet_item = $(drake.containers[0]).find('.layui-form-item').eq(msg.data['form_order']);
+
+                componnet_item.find('.setting_values').remove();
+                componnet_item.append(msg.data['html']);
+                //复制设置选项
+                var copy = componnet_item.find('input[type=hidden]').clone();
+                //移除旧的组件
+                componnet_item.after(msg.data['new_component']);
+                componnet_item.remove();
+                //componnet_item.remove 之后 componnet_item变量中的dom不存在了，因此从新append 时候不能使用componnet_item 否则append失败
+                $(drake.containers[0]).find('.layui-form-item').eq(msg.data['form_order'])
+                    .append('<div class="layui-input-inline"><a style="float:right" href="javascript:;" onclick="showsetting(this)"  class="layui-btn" ><i class="fa fa-edit"></i>编辑</a></div>')
+                    .append(copy);
+
+
+                //关闭最顶层的page
+                var pages = [];
+                $('.layui-layer-page').each(function(i,n){pages[i] = $(n).attr('times')});
+                layer.close(pages.pop());
+
+                //获取组件类型
+                var type = componnet_item.find('input[type=hidden][name="form_type[]"]').attr('value');
+
+                //重新渲染所有组件
+                reload_component_render(componnet_item,type);
+
+
+            }
+            else
+            {
+
+            }
+
+
+        }
+
+    });
+
+
+</script>
+
+
+
+</body>
+</html>

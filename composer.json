@@ -19,6 +19,9 @@
             "MvcBuilder\\Core\\":"Core/",
             "MvcBuilder\\Driver\\":"Driver/",
             "MvcBuilder\\System\\":"System/"
-        }
+        },
+        "files": [
+            "src/helper.php"
+        ]
     }
 }
