@@ -32,8 +32,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </form>
         </blockquote>
     </fieldset>
@@ -42,6 +40,9 @@
         <blockquote class="layui-elem-quote layui-quote-nm">
             <button class="layui-btn" lay-submit data-url="{:url($requseturl.'/pdel')}" data-call-back="table_pdel">
                 批量删除
+            </button>
+            <button class="layui-btn" lay-submit data-url="{:url($requseturl.'/build')}" data-call-back="open_builder_mvc_page">
+                生成MVC
             </button>
 
             <button class="layui-btn link" data-type="page" data-url="{:url($requseturl.'/add')}" style="float: right">
@@ -72,6 +73,9 @@
             <button class="layui-btn" lay-submit data-url="{:url($requseturl.'/pdel')}" data-call-back="table_pdel">
                 批量删除
             </button>
+            <button class="layui-btn link" data-type="page" data-url="{:url($requseturl.'/build')}" data-call-back="table_pdel">
+                生成MVC
+            </button>
 
             <button class="layui-btn link" data-type="page" data-url="{:url($requseturl.'/add')}" style="float: right">
                 添加
@@ -84,7 +88,11 @@
 <script type="text/javascript" src="/static/plugin/lay-extend-module/config.js"></script>
 
 
-
+<script>
+    function open_builder_mvc_page(msg) {
+        p(msg);
+    }
+</script>
 
 {:CMakerJs('all')}
 

@@ -1,13 +1,4 @@
 <?php
-// +----------------------------------------------------------------------
-// | jyolo/mvcbuilder
-// +----------------------------------------------------------------------
-// | Copyright (c) 2018-2028 http://i3tp.cn All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author: jyolo <364851534@qq.com>
-// +----------------------------------------------------------------------
 namespace MvcBuilder\System\tp51;
 use think\Controller;
 use think\facade\Request;
@@ -226,8 +217,8 @@ trait MvcBuilderController{
         $post = input('post.');
 
         //models 验证
-        $flag = $this->validate($post,'Models.add');
-        if($flag !== true)$this->error($flag);
+//        $flag = $this->validate($post,'Models.add');
+//        if($flag !== true)$this->error($flag);
 
 
         //组件的配置 写入数据库记录
@@ -278,6 +269,18 @@ trait MvcBuilderController{
         }
 
         $this->success('删除成功');
+    }
+
+    /**
+     *[menu]生成模型[/menu]
+     */
+    public function build(){
+        $post = input('post.');
+        if(!isset($post['ids']))$this->error('请先选择模型');
+
+        $build_url = url($this->requseturl.'/build_page',['mid' => join(',',$post['ids'])]);
+
+        $this->result($build_url);
     }
 
     /**
@@ -393,8 +396,8 @@ trait MvcBuilderController{
      */
     protected function result($data,$code = 0, $msg = '', $type = '', array $header = [])
     {
-        $count = $data['count'];
-        unset($data['count']);
+        $count = isset($data['count']) ?$data['count'] : 0;
+        if(isset($data['count']))unset($data['count']);
         $result = [
             'code' => $code,
             'count' => $count,
