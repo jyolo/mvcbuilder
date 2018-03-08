@@ -365,7 +365,7 @@ function setPathAttr(\$value,\$data){
 
             if(\$data['{$relation_field}'] == 0 || \$data['{$relation_field}'] == null) return 0;
             \$parent_path = \$this->where('{$key_field}', \$data['{$relation_field}'])->value('path');
-            \$parent_path = !strlen(\$parent_path) ? 0 :\$parent_path ;
+            \$parent_path = !strlen(\$parent_path) ? 0 : trim(\$parent_path ,',') ;
             return \$parent_path.','.\$data['{$relation_field}'] .',';
 
         }else{//排序的时候是没有赋值 parentid

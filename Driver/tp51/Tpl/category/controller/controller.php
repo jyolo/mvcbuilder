@@ -57,21 +57,7 @@ class _models_en_name_ extends Common
                 $config['treeData'] = $list;
                 $config['field'] = $post['relation_field'];
 
-                $list = Component::get_tree_array($config);
-
-                $list = Component::tree_to_array($list,$config['field'],true);
-
-                sort($list);
-                $return['data'] = [];
-                foreach($list as $k => $v){
-                    if($k == 0 && $v[$relation_field[1]] == 0 ){
-                        $pid = explode(',',trim($v['path'],','));
-                        $v[$relation_field[1]] = array_pop($pid);
-                    }
-
-                    unset($v['son']);
-                    $return['data'][] = $v;
-                }
+                $return['data'] = Component::get_tree_array($config,$config['field'],true);
                 $return['code'] = 0;
                 $return['count'] = count($list);
 

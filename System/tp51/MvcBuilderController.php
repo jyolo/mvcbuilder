@@ -237,8 +237,8 @@ trait MvcBuilderController{
         $post = input('post.');
 
         //models 验证
-        $flag = $this->validate($post,'Models.add');
-        if($flag !== true)$this->error($flag);
+        //$flag = $this->validate($post,'Models.add');
+        //if($flag !== true)$this->error($flag);
         //组件的配置 写入数据库记录
         MvcBuilder::core('SqlBuilder')->initData($post)->update();
 
