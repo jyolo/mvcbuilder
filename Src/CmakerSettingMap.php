@@ -90,12 +90,6 @@ class CmakerSettingMap
                 'option' => 'simple-简单|middle-常用|all-所有',
                 'layVerify' => 'required',
             ],
-            'serverUrl' => [
-                'component' => 'text', //使用哪个组件
-                'label' => '服务端url',
-                'value' => 'zxc',
-                'layVerify' => 'required',
-            ]
         ],
         'webuploader' => [
             'uploadtype' =>[
