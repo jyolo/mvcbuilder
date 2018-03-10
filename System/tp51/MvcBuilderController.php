@@ -1,14 +1,14 @@
 <?php
 namespace MvcBuilder\System\tp51;
+
 use think\Controller;
 use think\facade\Request;
-use think\Response;
-use think\exception\HttpResponseException;
 use CMaker\Maker;
 use MvcBuilder\MvcBuilder;
 use MvcBuilder\MvcBuilderHelper;
+use MvcBuilder\MvcBuilderUploader;
 
-trait MvcBuilderController{
+class MvcBuilderController extends Controller{
 
     protected static $models = null;
     protected static $models_component = null;
@@ -17,9 +17,9 @@ trait MvcBuilderController{
     {
         self::$models = new MvcBuilderModels();
         self::$models_component = new MvcBuilderModelsComponent();
-
-        $this->requseturl = Request::module() . '/' . Request::controller();
-        $this->assign('requseturl',$this->requseturl);
+        $config = get_uploader_config();
+        $this->CONFIG = $config['config'];
+        $this->ERRORINFO = $config['errorinfo'];
     }
 
 
@@ -133,7 +133,7 @@ trait MvcBuilderController{
 
 
         //设置项 提交的地址
-        $setting_dom['url'] = url($this->requseturl.'/edit_model_form',['form_order' => trim($param['form_order']) ,'form_type' => trim($param['component_name']) ]);
+        $setting_dom['url'] = url('mvcbuilder/edit_model_form',['form_order' => trim($param['form_order']) ,'form_type' => trim($param['component_name']) ]);
 
 
         $setting = json_decode(cache($setting) , true);
@@ -306,6 +306,147 @@ trait MvcBuilderController{
     }
 
     /**
+     *  ueditor 编辑器 配置/上传
+     */
+    public function ueditor(){
+
+        //由于config 获取到的配置文件均被小写 所以采用require 的方式获取配置文件
+        //$CONFIG = Config::get('upload.');
+
+        $CONFIG = $this->CONFIG;
+
+
+        $action = input('get.action');
+
+        switch ($action) {
+            case 'config':
+                exit(json_encode($CONFIG)) ;
+                break;
+            /* 上传图片 */
+            case 'uploadimage':
+                $config = array(
+                    "pathFormat" => $CONFIG['imagePathFormat'],
+                    "maxSize" => $CONFIG['imageMaxSize'],
+                    "allowFiles" => $CONFIG['imageAllowFiles']
+                );
+                $fieldName = $CONFIG['imageFieldName'];
+
+                break;
+            /* 上传涂鸦 */
+            case 'uploadscrawl':
+                //$result = $this->_ueditor_upload();
+                break;
+            /* 上传视频 */
+            case 'uploadvideo':
+                $config = array(
+                    "pathFormat" => $CONFIG['videoPathFormat'],
+                    "maxSize" => $CONFIG['videoMaxSize'],
+                    "allowFiles" => $CONFIG['videoAllowFiles']
+                );
+                $fieldName = $CONFIG['videoFieldName'];
+                break;
+            /* 上传文件 */
+            case 'uploadfile':
+                $config = array(
+                    "pathFormat" => $CONFIG['filePathFormat'],
+                    "maxSize" => $CONFIG['fileMaxSize'],
+                    "allowFiles" => $CONFIG['fileAllowFiles']
+                );
+                $fieldName = $CONFIG['imageFieldName'];
+                break;
+            /* 列出图片 */
+            case 'listimage':
+                $result = "";
+                break;
+            /* 列出文件 */
+            case 'listfile':
+
+                break;
+            /* 抓取远程文件 */
+            case 'catchimage':
+
+                break;
+            default:
+                $result = json_encode(array('state'=> '请求地址出错'));
+                break;
+        }
+        $up = new MvcBuilderUploader($fieldName, $config);
+        echo json_encode($up->getFileInfo());
+
+    }
+
+    public function webupload(){
+        $action = input('post.action');
+
+        try{
+            $field_name = key($_FILES);
+
+            if(!count($_FILES)) return ['code' => 0,'msg'=> '无上传文件' ,'data' => ''];
+
+            $error_code = $_FILES[$field_name]['error'];
+            $msg = $this->ERRORINFO[$error_code];
+
+            if($msg != 'SUCCESS')return json(['code' => 0,'msg'=> $msg ,'data' => '']);
+
+            switch ($action) {
+
+                /* 上传图片 */
+                case 'image':
+                    $config = [
+                        "pathFormat" => $this->CONFIG['imagePathFormat'],
+                        "maxSize" => $this->CONFIG['imageMaxSize'],
+                        "allowFiles" => $this->CONFIG['imageAllowFiles']
+                    ];
+                    break;
+                /* 上传视频 */
+                case 'video':
+                    $config = [
+                        "pathFormat" => $this->CONFIG['videoPathFormat'],
+                        "maxSize" => $this->CONFIG['videoMaxSize'],
+                        "allowFiles" => $this->CONFIG['videoAllowFiles']
+                    ];
+                    break;
+                /* 上传文件 */
+                case 'audio':
+                    $config = [
+                        "pathFormat" => $this->CONFIG['filePathFormat'],
+                        "maxSize" => $this->CONFIG['fileMaxSize'],
+                        "allowFiles" => $this->CONFIG['fileAllowFiles']
+                    ];
+                    break;
+                /* 上传文件 */
+                case 'file':
+                    $config = [
+                        "pathFormat" => $this->CONFIG['filePathFormat'],
+                        "maxSize" => $this->CONFIG['fileMaxSize'],
+                        "allowFiles" => $this->CONFIG['fileAllowFiles']
+                    ];
+                    break;
+                default:
+                    return ['code' => 0,'msg'=> '找不到请求的方法' ,'data' => ''];
+                    break;
+            }
+            //存储路径改为layuplaod
+            $config['pathFormat'] = str_replace('/ueditor/','',$config['pathFormat']);
+
+
+            $up = new MvcBuilderUploader($field_name, $config);
+
+
+
+            $info = $up->getFileInfo();
+
+            if($info['state'] != 'SUCCESS')return json(['code' => 0,'msg'=> $info['state'] ,'data' => '']);
+
+
+            return json(['code' => 1,'msg'=> '上传成功' ,'data' => $info]);
+        }catch (Exception $e){
+            return json(['code' => 0,'msg'=> $e->getMessage() ,'data' => '']);
+        }
+    }
+
+
+    /**
      *  逆向生成表单模型 通过数据库
      *  [menu]逆向模型[/menu]
      */
@@ -366,7 +507,7 @@ trait MvcBuilderController{
         }
 
 
-        $this->success('添加成功',url($this->requseturl.'/index'));
+        $this->success('添加成功',url('mvcbuilder/index'));
 
     }
 

@@ -15,7 +15,7 @@
 
 
 <div class="layui-box">
-    <form class="layui-form " action="{:url($requseturl.'/add_action')}" method="post" lay-filter="search">
+    <form class="layui-form " action="{:url('mvcbuilder/add_action')}" method="post" lay-filter="search">
         <fieldset class="layui-elem-field" >
             <legend>模型基本信息</legend>
             <div class="layui-field-box" >
@@ -184,7 +184,7 @@
 
     //打开组件设置界面
     function showsetting(el){
-        var requseturl = '{:url($requseturl."/get_model_form")}';
+        var requseturl = '{:url("mvcbuilder/get_model_form")}';
 
         var type = $(el).parents('.layui-form-item').find('.__component_name').attr('value')
             ,order = $(el).parents('.layui-form-item').find('.__form_order').attr('value')

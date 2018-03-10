@@ -28,7 +28,7 @@
                         <button class="layui-btn lay-submit">
                             <i class="layui-icon">&#xe615;</i> 搜索
                         </button>
-                        <button class="layui-btn link" data-type="page" data-url="{:url($requseturl.'/build')}" >
+                        <button class="layui-btn link" data-type="page" data-url="{'mvcbuilder/build')}" >
                             生成MVC
                         </button>
                     </div>
@@ -41,12 +41,12 @@
 
     <form class="layui-form layui-form-pane" action="" method="post" lay-filter="list-table">
         <blockquote class="layui-elem-quote layui-quote-nm">
-            <button class="layui-btn" lay-submit data-url="{:url($requseturl.'/pdel')}" data-call-back="table_pdel">
+            <button class="layui-btn" lay-submit data-url="{:url('mvcbuilder/pdel')}" data-call-back="table_pdel">
                 批量删除
             </button>
 
 
-            <button class="layui-btn link" data-type="page" data-url="{:url($requseturl.'/add')}" style="float: right">
+            <button class="layui-btn link" data-type="page" data-url="{:url('mvcbuilder/add')}" style="float: right">
                 添加
             </button>
         </blockquote>
@@ -59,24 +59,24 @@
             ['field' => 'table_name','title' => '模型表','sort' => true ] ,
             ['field' => 'add_time','title' => '添加时间','sort' => true ] ,
             ['toolbar' => '#actionTpl' ,'title' => '操作','fixed' => 'right']
-            ])->page(true)->limit(10)->url(url($requseturl.'/index'))->render()}
+            ])->page(true)->limit(10)->url(url('mvcbuilder/index'))->render()}
 
             <script type="text/html" id="actionTpl" lay-filter="actionbar">
                 <div class="layui-btn-group">
-                    <span data-url="{:url($requseturl.'/edit')}" data-field="id" class="layui-btn layui-btn-sm" lay-event="edit">编辑</span>
-                    <span data-url="{:url($requseturl.'/del')}"  class="layui-btn layui-btn-sm layui-btn-danger" lay-event="action" confirm-msg="已生成的`数据表`删除？" confirm-type="del">删除</span>
-                    <span data-url="{:url($requseturl.'/alldel')}"  class="layui-btn layui-btn-sm layui-btn-danger" lay-event="action" confirm-msg="已生成的`数据表，文件,菜单`全部删除？" confirm-type="del">彻底删除</span>
+                    <span data-url="{:url('mvcbuilder/edit')}" data-field="id" class="layui-btn layui-btn-sm" lay-event="edit">编辑</span>
+                    <span data-url="{:url('mvcbuilder/del')}"  class="layui-btn layui-btn-sm layui-btn-danger" lay-event="action" confirm-msg="已生成的`数据表`删除？" confirm-type="del">删除</span>
+                    <span data-url="{:url('mvcbuilder//alldel')}"  class="layui-btn layui-btn-sm layui-btn-danger" lay-event="action" confirm-msg="已生成的`数据表，文件,菜单`全部删除？" confirm-type="del">彻底删除</span>
                 </div>
             </script>
         </div>
 
         <blockquote class="layui-elem-quote layui-quote-nm">
-            <button class="layui-btn" lay-submit data-url="{:url($requseturl.'/pdel')}" data-call-back="table_pdel">
+            <button class="layui-btn" lay-submit data-url="{:url('mvcbuilder/pdel')}" data-call-back="table_pdel">
                 批量删除
             </button>
 
 
-            <button class="layui-btn link" data-type="page" data-url="{:url($requseturl.'/add')}" style="float: right">
+            <button class="layui-btn link" data-type="page" data-url="{:url('mvcbuilder/add')}" style="float: right">
                 添加
             </button>
         </blockquote>

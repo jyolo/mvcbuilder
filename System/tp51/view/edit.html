@@ -13,7 +13,7 @@
 </head>
 <body class="body">
     <div class="layui-box">
-    <form class="layui-form " action="{:url($requseturl.'/edit_action')}" method="post" lay-filter="models_form">
+    <form class="layui-form " action="{:url('mvcbuilder/edit_action')}" method="post" lay-filter="models_form">
         <fieldset class="layui-elem-field" >
             <legend>模型基本信息</legend>
             <div class="layui-field-box" >
@@ -205,9 +205,9 @@
 
 
         if(typeof  setting != 'undefined'){
-            var url = '{:url($requseturl."/get_model_form")}'+ "?component_name="+type + '&form_order='+ order + '&setting='+setting;
+            var url = '{:url("mvcbuilder/get_model_form")}'+ "?component_name="+type + '&form_order='+ order + '&setting='+setting;
         }else{
-            var url = '{:url($requseturl."/get_model_form")}'+ "?component_name="+type + '&form_order='+ order ;
+            var url = '{:url("mvcbuilder/get_model_form")}'+ "?component_name="+type + '&form_order='+ order ;
         }
 
 
