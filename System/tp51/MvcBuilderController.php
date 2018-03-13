@@ -253,7 +253,7 @@ class MvcBuilderController extends Controller{
     public function del(){
         $post = input('post.');
 
-        $flag = $this->models->_del($post['id']);
+        $flag = self::$models->_del($post['id']);
         if(!$flag)$this->error($this->models->getError());
         $this->success('删除成功');
     }

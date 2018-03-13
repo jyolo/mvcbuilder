@@ -42,6 +42,7 @@ class Replacer extends CommonReplacer
                             $option_setting = $setting['base']['option'];
                         }
 
+
                         $str .= '{:CMaker("select")';
                         $str .= '->label(\''.$setting['base']['label'].'\')';
                         $str .= '->option(\''.$option_setting.'\')';

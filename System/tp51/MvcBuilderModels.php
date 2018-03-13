@@ -181,57 +181,29 @@ class MvcBuilderModels extends Model
         $flag = $this::destroy($id);
 
         if(!$flag){
-            $this->error = '删除models失败';
+            $this->error = '删除models数据失败';
             Db::rollback();
             return false;
         }
         //删除字段表信息
-        $res = ModelsFields::all(['models_id' => $id]);
-        //如果有字段数据的话
-        if($res){
-            $flag = ModelsFields::destroy(['models_id' => $id]);
-            if(!$flag){
-                $this->error = '删除models_fields失败';
-                Db::rollback();
-                return false;
-            }
+        $res = MvcBuilderModelsComponent::destroy(['models_id' => $id]);
+
+        if(!$flag){
+            $this->error = '删除models_fields失败';
+            Db::rollback();
+            return false;
         }
-
-
         Db::commit();
 
-
-
-
-        return self::drop_table(C('database.prefix').$table_name);
+        return self::drop_table(config('database.prefix').$table_name);
 
     }
 
-    public function _del_field($id,$table){
-
-        $field = ModelsFields::get($id);
-        $field = $field->toArray();
-
-        $flag = TableMaker::del_field($table,$field);
-
-        if(!$flag){
-            $this->error = '删除mysql字段失败';
-            return false;
-        };
-        $flag = ModelsFields::destroy($id);
-        if(!$flag){
-            $this->error = '删除字段信息失败';
-            return false;
-        };
-
-        return true;
-
-    }
     /**
      * 删除表
      * @return bool|string
      */
-    protected static function drop_table($table_name){
+    public static function drop_table($table_name){
         $sql = 'DROP TABLE IF EXISTS `'.$table_name.'`';
 
         $flag = Db::execute($sql);

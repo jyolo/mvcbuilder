@@ -22,7 +22,7 @@ class _models_en_name_ extends Common
 
 
     /**
-     * [menu]查看[/menu]
+     * 查看
      */
     public function index(){
 
@@ -57,7 +57,8 @@ class _models_en_name_ extends Common
                 $config['treeData'] = $list;
                 $config['field'] = $post['relation_field'];
 
-                $return['data'] = Component::get_tree_array($config,$config['field'],true);
+                $return['data'] = Component::get_tree_array($config,true);
+                sort($return['data']);//从新排序下标从0开始，否则layui table 多选以及字段排序会出问题。
                 $return['code'] = 0;
                 $return['count'] = count($list);
 
@@ -75,13 +76,13 @@ class _models_en_name_ extends Common
 
     }
     /**
-     * [menu]添加[/menu]
+     * 添加
      */
     public function add(){
         return $this->fetch();
     }
     /**
-     * [menu]编辑[/menu]
+     * 编辑
      */
     public function edit(){
         $id = intval(input('param._primary_name_'));
@@ -98,7 +99,7 @@ class _models_en_name_ extends Common
     }
 
     /**
-     * [menu]保存添加[/menu]
+     * 保存添加
      */
     public function add_action(){
         $post = input('post.');
@@ -108,7 +109,7 @@ _notSetValueComponent_
         $flag ? $this->success('操作成功'):$this->error('操作失败');
     }
     /**
-     * [menu]保存编辑[/menu]
+     * 保存编辑
      */
     public function edit_action(){
         $post = input('post.');
@@ -119,22 +120,33 @@ _notSetValueComponent_
         $flag ? $this->success('操作成功','',$new_data):$this->error('操作失败');
     }
     /**
-     * [menu]删除[/menu]
+     * 删除
      */
     public function del(){
         $post = input('post.');
         $model = new model\_models_en_name_();
+
+        $childs = $model->where('','exp','instr(path,",'.$post['_primary_name_'].',")')->select();
+        if(count($childs) > 0)$this->error('请先删除子类');
+
         $flag = $model->where('_primary_name_','=',$post['_primary_name_'])->delete();
         $flag ? $this->success('操作成功'):$this->error('操作失败');
     }
 
     /**
-     * [menu]批量删除[/menu]
+     * 批量删除
      */
     public function pdel(){
         $post = input('post.');
         $model = new model\_models_en_name_();
+
         if(!isset($post['ids']))$this->error('请选选择');
+        $list = $model->where('_primary_name_','in',$post['ids'])->select()->toArray();
+        foreach($list as $k => $v){
+            $childs = $model->where('','exp','instr(path,",'.$v['_primary_name_'].',")')->count();
+            if($childs > 0)$this->error('请先删除子类');
+        }
+
         $flag = $model->where('_primary_name_','in',$post['ids'])->delete();
         $flag ? $this->success('操作成功'):$this->error('操作失败');
     }
