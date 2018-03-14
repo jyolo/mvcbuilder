@@ -14,7 +14,7 @@ class MvcBuilderHelper extends CmakerSettingMap
     private $component_attr = '';
     private $component_name ;
     //允许的组件
-    public $allowed_component = ['text','number','radio' ,'checkbox','select','daterange','switchs','hidden','ueditor','webuploader','relation'];
+    public $allowed_component = ['text','textarea','password','number','radio' ,'checkbox','select','daterange','switchs','hidden','ueditor','webuploader','relation'];
     //返回的设置
     public $set = [];
     private $setting ;
@@ -163,12 +163,19 @@ class MvcBuilderHelper extends CmakerSettingMap
             ->layVerify('required')
             ->render();
 
-        $type_value = ['int' => 'int','varchar' => 'varchar'];
+        $type_value = self::$fieldType;
         $seleted = null;
         if(isset($this->setting['field']['type'])){
             foreach($type_value as $k => $v){
-                if($k == $this->setting['field']['type']){$seleted = $k ;}
+                if(strtoupper($k) == strtoupper($this->setting['field']['type'])){$seleted = strtoupper($k) ;}
             }
+        }
+
+        $field_map = self::tosplitKeyToValue(self::$fieldMap);
+        if(isset($field_map[$this->component_name])){
+            $map = $field_map[$this->component_name];
+        }else{
+            $map['type'] = $map['length'] = $map['defualt_value'] = '';
         }
 
 
@@ -177,23 +184,22 @@ class MvcBuilderHelper extends CmakerSettingMap
             ->label('字段类型')
             ->helpinfo('多个值的时候均使用相同的字段类型')
             ->option($type_value)
-            ->choose($seleted)
+            ->choose($seleted ? $seleted : $map['type'])
             ->name('field[type]')
             ->layVerify('required')
             ->render();
 
 
-
-        $str .= Maker::build('number')
+        $str .= Maker::build('text')
             ->label('字段长度')
-            ->value(isset($this->setting['field']['length']) ? $this->setting['field']['length'] : '')
+            ->value(isset($this->setting['field']['length']) ? $this->setting['field']['length'] : $map['length'])
             ->helpinfo('字段长度')
             ->name('field[length]')
             ->render();
 
         $str .= Maker::build('text')
             ->label('字段默认值')
-            ->value(isset($this->setting['field']['defualt_value']) ? $this->setting['field']['defualt_value'] : '')
+            ->value(isset($this->setting['field']['defualt_value']) ? $this->setting['field']['defualt_value'] : $map['defualt_value'])
             ->helpinfo('多个值用" | "分隔')
             ->name('field[defualt_value]')
             ->render();
@@ -214,10 +220,24 @@ class MvcBuilderHelper extends CmakerSettingMap
      */
     private function verify(){
 
-        $str = Maker::build('text')
+
+        $layui_verify = [
+            'required'  => '必填项',
+            'phone'  => '手机号',
+            'email'  => '邮箱',
+            'url'  => '网址',
+            'number'  => '数字',
+            'date'  => '日期',
+            'identity'  => '身份证',
+        ];
+        $choose = isset($this->setting['verify']['layVerify']) ? $this->setting['verify']['layVerify'] : false;
+        if($choose)$choose = join(',',$choose);
+
+        $str = Maker::build('checkbox')
             ->label('layui验证规则')
-            ->value(isset($this->setting['verify']['layVerify']) ? $this->setting['verify']['layVerify'] : '')
-            ->helpinfo('多个值用" | "分隔')
+            ->option($layui_verify)
+            ->choose($choose)
+            ->helpinfo('可以多选')
             ->name('verify[layVerify]')
             ->render();
 

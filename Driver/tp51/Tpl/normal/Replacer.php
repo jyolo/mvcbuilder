@@ -140,6 +140,11 @@ class Replacer extends CommonReplacer
 
             $component .= '->name(\''.$setting['field']['name'].'\')';
 
+
+            if(is_array($setting['verify']['layVerify'])){
+                $setting['verify']['layVerify'] = join('|',$setting['verify']['layVerify']);
+            }
+
             $component .= '->layVerify(\''.$setting['verify']['layVerify'].'\')';
 
             $component .= '->render()}'."\r\n";
@@ -204,9 +209,12 @@ EOT;
             }
             $component .= '->'.$attr.'($vo[\''.$setting['field']['name'].'\'])';
 
-
-
             $component .= '->name(\''.$setting['field']['name'].'\')';
+
+
+            if(is_array($setting['verify']['layVerify'])){
+                $setting['verify']['layVerify'] = join('|',$setting['verify']['layVerify']);
+            }
 
             $component .= '->layVerify(\''.$setting['verify']['layVerify'].'\')';
 
@@ -340,7 +348,6 @@ EOT;
     public static function _validata_scene_(){
         return '\'\'';
     }
-
 
 
     public static function _CMakerJs_(){

@@ -397,7 +397,15 @@ EOT;
         return '\'\'';
     }
 
+    public static function _relation_field_($models,$module){
+        foreach($models['component'] as $k => $v){
+            if($v['component_name'] == 'relation'){
+                $setting = json_decode($v['setting'] ,true);
+                return $setting['field']['name'];
+            }
+        }
 
+    }
 
     public static function _CMakerJs_(){
         return '{:CMakerJs("all")}';

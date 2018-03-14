@@ -563,6 +563,8 @@ class SqlBuilder extends MvcBuilder
         $sql = 'CREATE TABLE IF NOT EXISTS '.config('database.prefix').$table.' (' ;
 
         $sql .= '`'.self::$data['primary']['name'].'` '.self::$data['primary']['type'];
+
+
         if(self::$data['primary']['length'] > 0){
             $sql .='('.intval(self::$data['primary']['length']).')';
         }
@@ -595,7 +597,7 @@ class SqlBuilder extends MvcBuilder
             foreach($arg as $sk => $sv){
                 $sql .= '`'.strval(trim($sv)).'` '.$type;
                 if($len > 0){
-                    $sql .='('.intval($len).')';
+                    $sql .='('.$len.')';
                 }
                 //如果有设置默认值
                 if(isset($defualt[$sk]) && strlen($defualt[$sk])){
@@ -651,9 +653,12 @@ class SqlBuilder extends MvcBuilder
 
             $sql .= 'ADD `'.$v['field']['name'].'` '.strtoupper($v['field']['type']);
 
-            if($v['field']['length'] > 0){
+
+            if(strlen($v['field']['length']) > 0){
+
                 $sql .= '('.$v['field']['length'].') NOT NULL';
             }
+
             if($v['field']['comment']){
                 $sql .= ' COMMENT "'.$v['field']['comment'].'"';
             }

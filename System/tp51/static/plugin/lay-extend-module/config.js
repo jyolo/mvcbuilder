@@ -84,19 +84,47 @@ function _setUrl(el ,url){
 
 function reload_table(msg) {
 
-    var table_id;
+
 
     try{
         var tables = [];
-        $.each(window.component_set,function (i,n) {
+        var component_set,tableObj ;
+
+
+        //p($(parent.window.document).find('.layui-tab-content').find('.layui-show').length);
+
+        //iframe 单独打开
+        if($(parent.window.document).find('.layui-tab-content').find('.layui-show').length == 0){
+            // p(window.component_set);
+            // p(window.table['index']);
+            // p(parent.window.component_set);
+            // p(parent.window.table['index']);
+            // return ;
+            component_set = parent.window.component_set;
+            tableObj  = parent.window.table;
+
+        }else{ //嵌入在main 里面的 iframe
+            component_set = $(parent.window.document).find('.layui-tab-content').find('.layui-show').find('iframe')[0].contentWindow.component_set
+            tableObj  = $(parent.window.document).find('.layui-tab-content').find('.layui-show').find('iframe')[0].contentWindow.table;
+        }
+
+        $.each(component_set,function (i,n) {
             tables.push(n);
         });
-        //根据按钮的 table_index 索引 获取 table的 id
-        table_id = tables[msg.table_index].uniqid_id;
+
+        //单页table
+        if(tables.length == 1){
+            tableObj.reload(tables[0].uniqid_id);
+        }else{ //多个table暂未处理
+
+        }
+
+        parent.window.layer.closeAll();
+
     }catch (e){
-        table_id = 'listTable'; //如果上面报错直接固定值默认 listTable
+        throw new DOMException(e);
     }
 
-    window.table.reload(table_id);
+
 
 }

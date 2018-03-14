@@ -18,9 +18,7 @@ layui.define(['table'],function (exports) {
             switch(obj.type){
                 case 'all':
 
-
                     $.each(table.cache[''+tableID+''],function (i,n) {
-
                         if(typeof n == 'object'){
                             var filter = 'checked_'+n.id;
                             var hidden = '<input type="hidden" id="'+filter+'" value="'+n.id+'" name="ids[]">';
@@ -117,7 +115,7 @@ layui.define(['table'],function (exports) {
                     var callback ={
                         end : function () {
                             //if(parent.listTable == 'undefined')return;
-
+                            p(window.table);
                             try{
                                 //通过linkhandler submit 方法里面 把全局的listtable 赋值了msg 对象 无刷新即时修改表格
                                 // if(typeof parent.listTable.msg == 'object' && parent.listTable.msg.code == 1){

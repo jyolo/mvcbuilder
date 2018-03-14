@@ -28,7 +28,7 @@ class CmakerSettingMap
         ],
     ];
 
-    //设定每个组件 的 设置选项 以及 设置选项 所用到的 组件
+    //设定每个组件的设置选项 以及 设置选项 所用到的 组件
     public static $map = [
         //key 为组件名字 多个相同的 可以 用 | 线分割
         'text|number' => [
@@ -132,10 +132,70 @@ class CmakerSettingMap
 
         ]
     ];
+    public static $fieldType = [
+        //常用
+        'TINYINT' => 'TINYINT',
+        'INT' => 'INT',
+
+        'VARCHAR' => 'VARCHAR',
+        'TEXT' => 'TEXT',
+
+        'DATE' => 'DATE',
+        'DATETIME' => 'DATETIME',
+        //数字类型
+        'SMALLINT' => 'SMALLINT',
+        'MEDIUMINT' => 'MEDIUMINT',
+        'BIGINT' => 'BIGINT',
+        'FLOAT' => 'FLOAT',
+        'DOUBLE' => 'DOUBLE',
+        'DECIMAL' => 'DECIMAL',
+        //字符串类型
+        'CHAR' => 'CHAR',
+        'TINYBLOB' => 'TINYBLOB',
+        'TINYTEXT' => 'TINYTEXT',
+        'BLOB' => 'BLOB',
+        'MEDIUMBLOB' => 'MEDIUMBLOB',
+        'MEDIUMTEXT' => 'MEDIUMTEXT',
+        'LONGBLOB' => 'LONGBLOB',
+        'LONGTEXT' => 'LONGTEXT',
+        //时间类型
+        'TIME' => 'TIME',
+        'YEAR' => 'YEAR',
+        'TIMESTAMP' => 'TIMESTAMP',
+    ];
+    //设定每个组件的数据库默认的字段信息
+    public static $fieldMap = [
+        'text|password|datarange|webuploader' => [
+            'type' => 'VARCHAR',
+            'length' => '255',
+            'defualt_value' => '',
+        ],
+        'textarea|ueditor' => [
+            'type' => 'TEXT',
+            'length' => '',
+            'defualt_value' => '',
+        ],
+        'number' => [
+            'type' => 'INT',
+            'length' => '11',
+            'defualt_value' => '0',
+        ],
+        'select|radio|checkbox|relation' => [
+            'type' => 'varchar',
+            'length' => '100',
+            'defualt_value' => '',
+        ],
+        'switch' => [
+            'type' => 'TINYINT',
+            'length' => '1',
+            'defualt_value' => '0',
+        ],
+
+    ];
 
     //每个组件所用设置组件的 值 显示的属性
     public static $setComponentsStatusAttr = [
-        'text|number|hidden|ueditor|webuploader' => 'value',
+        'text|number|textarea|password|hidden|ueditor|webuploader' => 'value',
         'switchs' => 'open',
         'select|radio|checkbox|relation' => 'choose',
     ];

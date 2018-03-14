@@ -1,12 +1,12 @@
 {extend name='../base/index/main'}
 
 {block name='main'}
+<style>
+    .layui-layout{overflow-y:hidden }
+    .search-quote{float:left;width: 100%;}
+    .layui-form-item{width:33.33%;float:left;clear: none;}
+</style>
 <div class="layui-layout">
-    <style>
-        .search-quote{float:left;width:100%;}
-        .layui-form-item{width:33.33%;float:left;clear: none;}
-    </style>
-
     <blockquote class="layui-elem-quote search-quote">
         <form class="layui-form layui-form-pane" action="{:url('_models_en_name_/index')}" method="post" lay-filter="search">
             _search_component_
@@ -21,7 +21,6 @@
             </div>
         </form>
     </blockquote>
-
 
     <form class="layui-form layui-form-pane" action="{:url('_models_en_name_/index')}" method="post" lay-filter="list-table">
         <blockquote class="layui-elem-quote layui-quote-nm">

@@ -115,6 +115,8 @@ _notSetValueComponent_
         $post = input('post.');
         $model = new model\_models_en_name_();
 _notSetValueComponent_
+        if($post['_primary_name_'] == $post['_relation_field_']) $this->error('上级不可以是自己');
+
         $flag = $model->isUpdate(true)->save($post);
         $new_data = $model->find($post['_primary_name_'])->toArray();
         $flag ? $this->success('操作成功','',$new_data):$this->error('操作失败');

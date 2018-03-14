@@ -53,9 +53,11 @@
                 <div class="layui-tab-content" style="height: 100px;">
                     <div class="layui-tab-item dragula layui-show ">
                         {:CMaker('text')->render()}
+                        {:CMaker('password')->render()}
                         {:CMaker('number')->render()}
                         {:CMaker('daterange')->render()}
                         {:CMaker('ueditor')->show('simple')->render()}
+                        {:CMaker('textarea')->render()}
                     </div>
                     <div class="layui-tab-item dragula">
                         {:CMaker('select')->render()}
@@ -78,7 +80,7 @@
 
         <div class="layui-form-item" style="margin-left: 36%">
             <div class="layui-input-inline ">
-                <button class="layui-btn"  lay-submit>提交</button>
+                <button class="layui-btn"  lay-submit data-call-back="reload_table">提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>

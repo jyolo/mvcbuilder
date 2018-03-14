@@ -38,6 +38,8 @@ class MvcBuilderController extends Controller{
 
             $return['data'] = self::$models->getList($post);
             $return['count'] = self::$models->count();
+//            $return['data'] = [];
+//            $return['count'] = 0;
             $return['code'] = 0;
             return json($return);
 
@@ -263,9 +265,10 @@ class MvcBuilderController extends Controller{
      */
     public function pdel(){
         $post = input('post.');
+        if(!isset($post['ids'])) $this->error('请先选择');
 
         foreach($post['ids'] as $k => $v){
-            $flag = $this->models->_del($v);
+            $flag = self::$models->_del($v);
             if(!$flag)$this->error($this->models->getError());
         }
 
