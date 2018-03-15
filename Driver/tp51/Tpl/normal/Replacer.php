@@ -141,6 +141,9 @@ class Replacer extends CommonReplacer
             $component .= '->name(\''.$setting['field']['name'].'\')';
 
 
+            if(!isset($setting['verify']['layVerify'])){
+                $setting['verify']['layVerify'] = '';
+            }
             if(is_array($setting['verify']['layVerify'])){
                 $setting['verify']['layVerify'] = join('|',$setting['verify']['layVerify']);
             }
@@ -212,6 +215,9 @@ EOT;
             $component .= '->name(\''.$setting['field']['name'].'\')';
 
 
+            if(!isset($setting['verify']['layVerify'])){
+                $setting['verify']['layVerify'] = '';
+            }
             if(is_array($setting['verify']['layVerify'])){
                 $setting['verify']['layVerify'] = join('|',$setting['verify']['layVerify']);
             }

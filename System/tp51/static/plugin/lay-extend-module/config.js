@@ -81,24 +81,18 @@ function _setUrl(el ,url){
     //标记已经设置过url
     el.addClass('has-set-url');
 }
-
+//添加/编辑/批量删除 的回调函数
 function reload_table(msg) {
-
-
-
     try{
         var tables = [];
         var component_set,tableObj ;
-
-
-        //p($(parent.window.document).find('.layui-tab-content').find('.layui-show').length);
 
         //iframe 单独打开
         if($(parent.window.document).find('.layui-tab-content').find('.layui-show').length == 0){
             // p(window.component_set);
             // p(window.table['index']);
             // p(parent.window.component_set);
-            // p(parent.window.table['index']);
+
             // return ;
             component_set = parent.window.component_set;
             tableObj  = parent.window.table;
@@ -112,7 +106,7 @@ function reload_table(msg) {
             tables.push(n);
         });
 
-        //单页table
+        //单个table
         if(tables.length == 1){
             tableObj.reload(tables[0].uniqid_id);
         }else{ //多个table暂未处理
@@ -124,7 +118,5 @@ function reload_table(msg) {
     }catch (e){
         throw new DOMException(e);
     }
-
-
 
 }

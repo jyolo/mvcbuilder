@@ -42,7 +42,12 @@ class MvcBuilderModels extends Model
     public function getList($post){
 
         $res = $this->page($post['page'] ,$post['limit'])->select()->toArray();
-
+        //当前分页没有数据，但总数还是有的
+        //fixed 第二页数据删除完了之后 table reload 不会跳转到 第一页
+        if(!count($res) && $this->count($this->pk) > 0){
+            $currpage = (($post['page'] - 1) >= 1) ? $post['page'] - 1 : 1 ;
+            $res = $this->page($currpage ,$post['limit'])->select()->toArray();
+        }
         return $res;
     }
 
