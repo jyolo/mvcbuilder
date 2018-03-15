@@ -38,76 +38,81 @@ class Handler extends Driver
      */
     public function makeFolderMap(){
 
-        $filepath = $this->config['app_path'].self::$data['file_name'].DIRECTORY_SEPARATOR;
-        $arr = [];
-        $models = $this->get_models(self::$data['models_id']);
+        try{
 
+            $filepath = $this->config['app_path'].self::$data['file_name'].DIRECTORY_SEPARATOR;
+            $arr = [];
+            $models = $this->get_models(self::$data['models_id']);
 
-        foreach($this->config['folder'] as $k => $v){
-            //文件的小标为数字
-            if($k == '__file__'){
-                foreach($v as $sk => $sv){
+            foreach($this->config['folder'] as $k => $v){
+                //文件的小标为数字
+                if($k == '__file__'){
+                    foreach($v as $sk => $sv){
 
-                    $arr[$sk] = $filepath.$sv;                                                 
+                        $arr[$sk] = $filepath.$sv;
+                    }
                 }
-            }
-            //目录的下标 为字符串
-            if($k == '__dir__'){
+                //目录的下标 为字符串
+                if($k == '__dir__'){
 
-                //循环加入 controller ,models,validata,view 的目录结构
-                foreach($v as $sk => $folder){
-                    $suffix = isset($this->config['suffix'][$folder]) ? $this->config['suffix'][$folder] : '.php';
-                    $arr[$folder] = $tem = []; // like arr[controller] = []
+                    //循环加入 controller ,models,validata,view 的目录结构
+                    foreach($v as $sk => $folder){
+                        $suffix = isset($this->config['suffix'][$folder]) ? $this->config['suffix'][$folder] : '.php';
+                        $arr[$folder] = $tem = []; // like arr[controller] = []
 
-                    foreach($models as $mk => $mv){
-                        $tname  = $this->table_name_to_file_name($mv['table_name']);
-                        switch ($folder){
-                            case 'view':
-                                if(isset($this->config['view_path'])){
-                                    //$path = $this->config['view_path'].self::$data['file_name'].DIRECTORY_SEPARATOR.$tname;//视图的文件夹名字不能使用驼峰否则或not found
-                                    $path = $this->config['view_path'].self::$data['file_name'].DIRECTORY_SEPARATOR.$mv['table_name'];
-                                }else{ //未定义视图的路径 则采用默认的路径
-                                    //$path = $filepath.$folder.DIRECTORY_SEPARATOR.$tname; //视图的文件夹名字不能使用驼峰否则或not found
-                                    $path = $filepath.$folder.DIRECTORY_SEPARATOR.$mv['table_name'];
-                                }
-
-                                if(isset($this->config['view_file'])){
-
-                                    foreach($this->config['view_file'] as $viewfile){
-                                        $tem = [
-                                            'models_info' => $mv,       //models的信息
-                                            'tpl_type' => $folder,      //tpl类型
-                                            'tpl_plan' => $mv['tpl_plan'],//模板方案
-                                            'view_file' => $viewfile,
-                                            'dir' => $path,    //模板的文件
-                                            'file' => $path.DIRECTORY_SEPARATOR.$viewfile.$suffix           //将要生成的文件
-                                        ];
-                                        array_push($arr[$folder],$tem);
+                        foreach($models as $mk => $mv){
+                            $tname  = $this->table_name_to_file_name($mv['table_name']);
+                            switch ($folder){
+                                case 'view':
+                                    if(isset($this->config['view_path'])){
+                                        //$path = $this->config['view_path'].self::$data['file_name'].DIRECTORY_SEPARATOR.$tname;//视图的文件夹名字不能使用驼峰否则或not found
+                                        $path = $this->config['view_path'].self::$data['file_name'].DIRECTORY_SEPARATOR.$mv['table_name'];
+                                    }else{ //未定义视图的路径 则采用默认的路径
+                                        //$path = $filepath.$folder.DIRECTORY_SEPARATOR.$tname; //视图的文件夹名字不能使用驼峰否则或not found
+                                        $path = $filepath.$folder.DIRECTORY_SEPARATOR.$mv['table_name'];
                                     }
-                                }
-                                break;
-                            default:
-                                $tem = [
-                                    'models_info' => $mv,  //models的信息
-                                    'tpl_type' => $folder, //tpl类型
-                                    'tpl_plan' => $mv['tpl_plan'] ,//模板方案
-                                    'dir' => $filepath.$folder,    //模板的文件
-                                    'file' => $filepath.$folder.DIRECTORY_SEPARATOR.$tname.$suffix          //将要生成的文件
-                                ];
-                                $arr[$folder][$mk] = $tem;
-                                break;
+
+                                    if(isset($this->config['view_file'])){
+
+                                        foreach($this->config['view_file'] as $viewfile){
+                                            $tem = [
+                                                'models_info' => $mv,       //models的信息
+                                                'tpl_type' => $folder,      //tpl类型
+                                                'tpl_plan' => $mv['tpl_plan'],//模板方案
+                                                'view_file' => $viewfile,
+                                                'dir' => $path,    //模板的文件
+                                                'file' => $path.DIRECTORY_SEPARATOR.$viewfile.$suffix           //将要生成的文件
+                                            ];
+                                            array_push($arr[$folder],$tem);
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    $tem = [
+                                        'models_info' => $mv,  //models的信息
+                                        'tpl_type' => $folder, //tpl类型
+                                        'tpl_plan' => $mv['tpl_plan'] ,//模板方案
+                                        'dir' => $filepath.$folder,    //模板的文件
+                                        'file' => $filepath.$folder.DIRECTORY_SEPARATOR.$tname.$suffix          //将要生成的文件
+                                    ];
+                                    $arr[$folder][$mk] = $tem;
+                                    break;
+                            }
+
                         }
 
+
+
+
                     }
-
-
-
-
                 }
             }
-        }
 
-        return $arr;
+            return $arr;
+
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
 
     }
 
@@ -118,29 +123,33 @@ class Handler extends Driver
      */
     public function buildFile($foldermap)
     {
-        $module_path = $this->config['app_path'].self::$data['file_name'];
-        //新的模块不存在的情况下 新建文件夹
-        if(!file_exists($module_path))mkdir($module_path);
+        try{
+            $module_path = $this->config['app_path'].self::$data['file_name'];
+            //新的模块不存在的情况下 新建文件夹
+            if(!file_exists($module_path))mkdir($module_path);
 
-        foreach($foldermap as $k => $v){
-            //文件
-            if(is_numeric($k)){
-                if(!file_exists($v))file_put_contents($v,'<?php'."\r\n");
-            }
-            //目录
-            if(is_string($k)){
-                foreach($v as $sk => $sv){
-                    //创建目录
-                    if(!file_exists($sv['dir']))mkdir($sv['dir'],0775,true);
-                    //创建文件
-                    ContentBuilder::create($sv);
+            foreach($foldermap as $k => $v){
+                //文件
+                if(is_numeric($k)){
+                    if(!file_exists($v))file_put_contents($v,'<?php'."\r\n");
+                }
+                //目录
+                if(is_string($k)){
+                    foreach($v as $sk => $sv){
+                        //创建目录
+                        if(!file_exists($sv['dir']))mkdir($sv['dir'],0775,true);
+                        //创建文件
+                        ContentBuilder::create($sv);
+                    }
 
                 }
 
             }
 
+            return true;
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
         }
-
 
     }
 

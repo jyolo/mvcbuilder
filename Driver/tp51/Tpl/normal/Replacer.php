@@ -222,6 +222,7 @@ EOT;
                 $setting['verify']['layVerify'] = join('|',$setting['verify']['layVerify']);
             }
 
+
             $component .= '->layVerify(\''.$setting['verify']['layVerify'].'\')';
 
             $component .= '->render()}'."\r\n";
@@ -303,7 +304,7 @@ EOT;
     public function get{$FieldName}Attr(\$value)
     {
         if(!\$value) return '暂无';
-        return \$this->name('{$setting['base']['table']}')->where('{$field[0]}',\$value)->value('{$field[1]}');
+        return \$this->name('{$setting['base']['table']}')->where('{$field[0]}',\$value)->value('{$field[2]}');
     }\r\n
 EOT;
                     break;

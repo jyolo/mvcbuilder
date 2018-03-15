@@ -2,12 +2,14 @@
 
 {block name='main'}
 <style>
-    .layui-layout{overflow-y:hidden }
+    .layui-elem-field{overflow:hidden }
     .search-quote{float:left;width: 100%;}
     .layui-form-item{width:33.33%;float:left;clear: none;}
 </style>
 <div class="layui-layout">
-    <blockquote class="layui-elem-quote search-quote">
+    <fieldset class="layui-elem-field layui-field-title" >
+        <legend>搜索</legend>
+        <blockquote class="layui-elem-quote search-quote">
         <form class="layui-form layui-form-pane" action="{:url('_models_en_name_/index')}" method="post" lay-filter="search">
             _search_component_
             <div class="layui-form-item">
@@ -21,7 +23,7 @@
             </div>
         </form>
     </blockquote>
-
+    </fieldset>
     <form class="layui-form layui-form-pane" action="{:url('_models_en_name_/index')}" method="post" lay-filter="list-table">
         <blockquote class="layui-elem-quote layui-quote-nm">
             <button class="layui-btn" lay-submit data-url="{:url('_models_en_name_/pdel')}" data-call-back="reload_table" table_index="0">

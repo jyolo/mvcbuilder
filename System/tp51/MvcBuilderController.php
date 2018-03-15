@@ -281,6 +281,7 @@ class MvcBuilderController extends Controller{
      */
     public function build(){
         $models = self::$models->select()->toArray();
+
         $this->assign('models' ,$models);
         return $this->fetch(__DIR__ . '/view/build.html');
     }
@@ -291,21 +292,20 @@ class MvcBuilderController extends Controller{
     public function build_action(){
         $post = input('post.');
 
-        //$flag = $this->validate($post,'Module');
-        //if(!isset($post['models_id']))$this->error('请选择右侧模型');
+        if(!isset($post['models_id']))$this->error('请选择右侧模型');
 
 
         $MvcBuilder = MvcBuilder::init('tp51' ,$post);
-
         //创建目录地图
         $foldermap = $MvcBuilder->makeFolderMap();
 
         //生成文件
         $MvcBuilder->buildFile($foldermap);
 
-        //p($a);
+        $this->success('生成成功');
 
-        die();
+
+
 
     }
 
