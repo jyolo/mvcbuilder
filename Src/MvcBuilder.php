@@ -25,7 +25,7 @@ class MvcBuilder
     public static function init($driver_name,$post = []){
 
         $self = get_class();
-        $driver_called = explode('\\',$self)[0].'\Driver\\'.$driver_name.'\Handler';
+        $driver_called = explode('\\',$self)[0].'\Driver\\'.$driver_name.'\Replacer\Handler';
 
         //检查驱动是否继承了core 里面的driver
         if(get_parent_class($driver_called) != explode('\\',$self)[0].'\Core\Driver') throw new \ErrorException($driver_called .'驱动未定义');
@@ -67,7 +67,7 @@ class MvcBuilder
         $self = get_class();
 
 
-        $tpl_path = str_replace('\Src','',__DIR__) .'\Driver\\'.$driver_name.'\Tpl';
+        $tpl_path = str_replace('\Src','',__DIR__) .'\Driver\\'.$driver_name.'\Replacer\Tpl';
 
         //检查驱动是否继承了core 里面的driver
         if(!file_exists($tpl_path))throw new \ErrorException($tpl_path .'不存在');

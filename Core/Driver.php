@@ -49,19 +49,25 @@ abstract class Driver extends MvcBuilder
      */
     protected function get_models($model_ids){
         $field = 'id,module_id,models_name,table_name,tpl_plan,primary_name,primary_type,primary_length,status';
-        $models = Db::name('models')
+        $models = Db::table('jy_models')
             ->field($field)
             ->where('id','in',$model_ids)
             ->select();
+
+        $models = json_decode(json_encode($models),true);
+
         if(!$models)throw new \Exception('模型不存在');
         //获取模型的所有组件
         foreach($models as $k => $v){
-            $models[$k]['component'] = Db::name('models_component')
+
+            $models[$k]['component'] = Db::table('jy_models_component')
                 ->field('id as cid,component_name,setting')
-                ->where('models_id','eq',$v['id'])
-                ->order('sorts asc')
+                ->where(['models_id' => $v['id']])
+               ->order('sorts asc')
                 ->select();
+
         }
+
 
         return $models;
     }

@@ -12,7 +12,7 @@ use MvcBuilder\MvcBuilder;
 use CMaker\Maker;
 use think\Db;
 use think\Exception;
-use think\facade\Session;
+
 
 class SqlBuilder extends MvcBuilder
 {
@@ -424,13 +424,13 @@ class SqlBuilder extends MvcBuilder
         if(self::$error !== false) return self::$error;
 
 
-        $manager = Session::get('manager');
+        $manager = session('manager');
 
         $now = date('Y-m-d H:i:s' ,time());
 
         Db::startTrans();
         try{
-            $models_id = Db::name('models')->insertGetId([
+            $models_id = Db::table('jy_models')->insertGetId([
                 'models_name' => self::$data['models_name'],
                 'table_name' => self::$data['table_name'],
                 'tpl_plan' => self::$data['tpl_plan'],
@@ -473,7 +473,7 @@ class SqlBuilder extends MvcBuilder
 
 
 
-            $flag = Db::name('models_component')->insertAll($component);
+            $flag = Db::table('jy_models_component')->insertAll($component);
             Db::commit();
 
             return true;

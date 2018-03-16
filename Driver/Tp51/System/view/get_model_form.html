@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>MvcBuilder</title>
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+
+</head>
+<body class="body">
+    <div class="layui-box">
+    <div class="layui-box">
+        <fieldset class="layui-elem-field" style="padding:10px;">
+            <legend>设置组件</legend>
+            <form action="{$setting['url']}" method="post" class="layui-form" lay-filter="component_setting">
+                <!--固定设置值-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">表格中显示</label>
+                    <div class="layui-input-inline" style="width: 50px;">
+                        <input type="checkbox" name="intable" lay-skin="switch" lay-text="是|否" {$intable}>
+                    </div>
+                    <label class="layui-form-label" style="width: 90px;">作为搜索选项</label>
+                    <div class="layui-input-inline" >
+                        <input type="checkbox" name="insearch" lay-skin="switch" lay-text="是|否" {$insearch}>
+                    </div>
+                </div>
+
+
+                <div class="layui-tab layui-tab-card">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">基础设置</li>
+                        <li>字段设置</li>
+                        <li>验证设置</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            {$setting['base'] | raw}
+                        </div>
+                        <div class="layui-tab-item">
+                            {$setting['field'] | raw}
+                        </div>
+                        <div class="layui-tab-item">
+                            {$setting['verify'] | raw}
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-left: 36%">
+                <div class="layui-input-inline ">
+                    <button class="layui-btn" lay-submit data-call-back="save_component">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+            </form>
+        </fieldset>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="/static/plugin/layui/layui.js"></script>
+<script type="text/javascript" src="/static/plugin/lay-extend-module/config.js"></script>
+
+
+<script>
+
+    var layer,$;
+    layui.use(['layer','element'],function () {
+        layer = layui.layer;
+        $ = layui.jquery;
+    });
+
+
+    //组件设置表单提交成功时候的回调函数
+    function save_component(msg) {
+
+        if(msg.code == 1){
+            //获取当前iframe的id
+            var index = parent.layer.getFrameIndex(window.name);
+            //当前的iframe
+            var now = 'layui-layer-iframe'+index;
+
+            $('.layui-layer-content',parent.document).each(function(i,n){
+                if($(n).find('iframe').attr('id') != now){
+                    window.font_iframe = $(n);
+                }
+            });
+
+            try{
+                //当本页面是嵌入在iframe中获取前面一个iframe的对象
+                var font_iframe = window.font_iframe.find('iframe');
+            }catch (e){
+                //但本页面独立打开 前一个页面就是parent父级页面
+                var font_iframe = $(parent.document);
+            }
+
+
+            //获取前面一个iframe里面的表单预览的对象
+            var drake0 = font_iframe.contents().find('.dragula').eq(0); //左边的放置区域
+
+
+            var drake1 = font_iframe.contents().find('.dragula:gt(0)'); //右边的预设的组件 tab选项卡中三个
+
+            //找到左边当前编辑的组件
+            var componnet_item = drake0.find('.layui-form-item').eq(msg.data['form_order']);
+            component_type = componnet_item.attr('component-name');
+
+            //移出旧的setting
+            componnet_item.find('.__setting').remove();
+            //追加新的setting
+            componnet_item.append(msg.data['html']);
+            //复制设置选项
+            var input_hidden_copy = componnet_item.find('input[type=hidden]').clone();
+
+            //添加新的组件
+            componnet_item.after(msg.data['new_component']);
+            //移除旧的组件
+            componnet_item.remove();
+
+
+            //新生成的组件后面追加编辑按钮 以及设置信息
+            var newel = drake0.find('.layui-form-item').eq(msg.data['form_order']);
+            newel.append('<div class="layui-input-inline"><a style="float:right" href="javascript:;" onclick="showsetting(this)"  class="layui-btn" ><i class="fa fa-edit"></i>编辑</a></div>')
+                .append(input_hidden_copy);
+
+
+            //右边区域获取组件原始的id (组件渲染的组件需要有 组件名称的class )
+            // if(drake1.find('.'+component_type).length > 1){
+            //     alert('预设组件中不可以有重复的组件');
+            //     return ;
+            // }
+
+
+            var oldid = drake1.find('.'+component_type).attr('id');
+
+
+
+
+            //使用新的设置选项
+            var attrset = msg.data['new_component_attr'];
+
+            try{
+                //调用前面一个iframe 里面的 function 重新渲染 组件
+                font_iframe[0].contentWindow.reload_component_render(newel,component_type,oldid,attrset);
+            }catch (e){
+                //调用父级页面的funcion 重新渲染组价
+                parent.window.reload_component_render(newel,component_type,oldid,attrset);
+            }
+
+
+
+            //关闭当前的iframe弹窗
+            parent.layer.close(index);
+
+
+
+        }
+
+
+
+    }
+
+</script>
+
+
+
+</body>
+</html>
+
+
+
+
+
