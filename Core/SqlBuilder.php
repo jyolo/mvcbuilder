@@ -134,7 +134,7 @@ class SqlBuilder extends MvcBuilder
      */
     private function updateComponent(){
         //p(self::$data['component']);
-        $info = Db::name('models_component')->where('models_id' ,self::$data['models_id'])->select();
+        $info = Db::table('jy_models_component')->where('models_id' ,self::$data['models_id'])->select();
 
         $up['new'] = $up['update'] = $up['del'] = [];
         //组装 新增，更新 ，删除的组件数据
@@ -229,7 +229,7 @@ class SqlBuilder extends MvcBuilder
                 $comps[$i]['update_time'] = $now;
 
                 //添加字段完成后 写入数据库 返回写入id
-                $add_component_ids[$i] = Db::name('models_component')->insertGetId($comps[$i]);
+                $add_component_ids[$i] = Db::table('jy_models_component')->insertGetId($comps[$i]);
 
                 $i++;
             }
@@ -259,7 +259,7 @@ class SqlBuilder extends MvcBuilder
         try{
 
             foreach($component as $k => $v){
-                $info = Db::name('models_component')->where('id',$v['component_id'])->value('setting');
+                $info = Db::table('jy_models_component')->where('id',$v['component_id'])->value('setting');
 
                 if(isset($v['up_field']) && $v['up_field'] == true){
                     $info = json_decode($info,true);
@@ -298,7 +298,7 @@ class SqlBuilder extends MvcBuilder
             //修改数据库
             Db::startTrans();
             foreach($up_data as $k => $v){
-                $flag = Db::name('models_component')->update($up_data[$k]);
+                $flag = Db::table('jy_models_component')->update($up_data[$k]);
                 if(!$flag){
                     self::$error = '第'.$k .'个组件更新失败';
                     Db::rollback();
@@ -334,7 +334,7 @@ class SqlBuilder extends MvcBuilder
         }
 
 
-        $flag = Db::name('models_component')->delete($ids);
+        $flag = Db::table('jy_models_component')->delete($ids);
         $flag = $flag ? true : false;
         return $flag ;
     }
@@ -344,7 +344,7 @@ class SqlBuilder extends MvcBuilder
      * 更新models
      */
     private function updateModels(){
-        $info = Db::name('models')->field('table_name,primary_name,primary_type,primary_length')->find(self::$data['models_id']);
+        $info = Db::table('jy_models')->field('table_name,primary_name,primary_type,primary_length')->find(self::$data['models_id']);
 
 
         //检查表的名称是否变更
@@ -395,7 +395,7 @@ class SqlBuilder extends MvcBuilder
 
 
         //更新数据库
-        $update_data = Db::name('models')
+        $update_data = Db::table('jy_models')
             ->where('id',self::$data['models_id'])
             ->update([
                 'models_name' => self::$data['models_name'],
