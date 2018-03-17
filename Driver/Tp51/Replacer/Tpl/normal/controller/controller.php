@@ -41,7 +41,7 @@ class _models_en_name_ extends Common
 
             $model = new model\_models_en_name_();
 
-            $res = $model->page($post['page'] ,$post['limit'])->select()->toArray();
+            $res = $model->where($where)->page($post['page'] ,$post['limit'])->select()->toArray();
             //当前分页没有数据，但总数还是有的
             //fixed 第二页数据删除完了之后 layuitable reload 不会自动跳转到 第一页
             if(!count($res) && $model->count($model->getPk()) > 0){
@@ -88,6 +88,7 @@ class _models_en_name_ extends Common
         $post = input('post.');
         $model = new model\_models_en_name_();
 _notSetValueComponent_
+_notSelectTopCat_
         $flag = $model->isUpdate(false)->save($post);
         $flag ? $this->success('操作成功'):$this->error('操作失败');
     }
@@ -98,6 +99,7 @@ _notSetValueComponent_
         $post = input('post.');
         $model = new model\_models_en_name_();
 _notSetValueComponent_
+_notSelectTopCat_
         $flag = $model->isUpdate(true)->save($post);
         $new_data = $model->find($post['_primary_name_'])->toArray();
         $flag ? $this->success('操作成功','',$new_data):$this->error('操作失败');

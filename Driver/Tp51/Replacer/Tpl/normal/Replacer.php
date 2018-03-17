@@ -188,6 +188,44 @@ EOT;
 
         return $funcStr;
     }
+    ////关联层级选择 禁止选择 顶级层级
+    public static function _notSelectTopCat_($models,$module){
+        foreach($models['component'] as $k => $v){
+            $setting = json_decode($v['setting'] ,true);
+            //关联层级选择
+            if($v['component_name'] == 'relation' && $setting['base']['showtype'] == 'treeSelect'){
+
+                $ModelName = '';
+
+                if(strpos($setting['base']['table'],'_')){
+                    $arr = explode('_',$setting['base']['table']);
+                    foreach($arr as $k => $v){
+                        $ModelName .= ucfirst($v);
+                    }
+                }else{
+                    $ModelName = ucfirst($setting['base']['table']);
+                }
+
+                $field = explode(',',$setting['base']['field']);
+                $self_field = $setting['field']['name'];
+
+                $str = <<<EOT
+        if(isset(\$post['{$self_field}']) && intval(\$post['{$self_field}']) > 0){
+            \$cat = model\\{$ModelName}::where('{$field[0]}',\$post['{$self_field}'])->value('{$field[1]}');
+            if(\$cat == 0)\$this->error('不能选择顶级分类');
+        }
+EOT;
+                return $str;
+            }else{
+                continue;
+            }
+
+
+        }
+
+
+
+    }
 
     public static function _edit_form_component_($models){
 

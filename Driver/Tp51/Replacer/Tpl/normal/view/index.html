@@ -2,15 +2,17 @@
 
 {block name='main'}
 <style>
-     .layui-elem-field{overflow:hidden }
     .search-quote{float:left;width: 100%;}
     .layui-form-item{width:33.33%;float:left;clear: none;}
+    .layui-boxs{padding:15px;}
+    .layui-elem-quote{padding:10px 0;}
 </style>
 <div class="layui-layout">
     <fieldset class="layui-elem-field layui-field-title" >
         <legend>搜索</legend>
         <blockquote class="layui-elem-quote search-quote">
-        <form class="layui-form layui-form-pane" action="{:url('_models_en_name_/index')}" method="post" lay-filter="search">
+            <div class="layui-boxs">
+                <form class="layui-form layui-form-pane" action="{:url('_models_en_name_/index')}" method="post" lay-filter="search">
         _search_component_
             <div class="layui-form-item">
                 <div class="layui-inline">
@@ -21,19 +23,22 @@
                     </div>
                 </div>
             </div>
-        </form>
+            </form>
+            </div>
         </blockquote>
     </fieldset>
 
     <form class="layui-form layui-form-pane" action="{:url('_models_en_name_/index')}" method="post" lay-filter="list-table">
         <blockquote class="layui-elem-quote layui-quote-nm">
-            <button class="layui-btn" lay-submit data-url="{:url('_models_en_name_/pdel')}" data-call-back="reload_table" table_index="0">
-                批量删除
-            </button>
+            <div class="layui-boxs">
+                <button class="layui-btn" lay-submit data-url="{:url('_models_en_name_/pdel')}" data-call-back="reload_table" table_index="0">
+                    批量删除
+                </button>
 
-            <button class="layui-btn link" data-type="page" data-url="{:url('_models_en_name_/add')}" style="float: right">
-                添加
-            </button>
+                <button class="layui-btn link" data-type="page" data-url="{:url('_models_en_name_/add')}" style="float: right">
+                    添加
+                </button>
+            </div>
         </blockquote>
 
        _table_
@@ -48,13 +53,14 @@
 
 
         <blockquote class="layui-elem-quote layui-quote-nm">
-            <button class="layui-btn" lay-submit data-url="{:url('_models_en_name_/pdel')}" data-call-back="reload_table" table_index="0">
-                批量删除
-            </button>
-
-            <button class="layui-btn link" data-type="page" data-url="{:url('_models_en_name_/add')}" style="float: right">
-                添加
-            </button>
+            <div class="layui-boxs">
+                <button class="layui-btn" lay-submit data-url="{:url('_models_en_name_/pdel')}" data-call-back="reload_table" table_index="0">
+                    批量删除
+                </button>
+                <button class="layui-btn link" data-type="page" data-url="{:url('_models_en_name_/add')}" style="float: right">
+                    添加
+                </button>
+            </div>
         </blockquote>
     </form>
 </div>

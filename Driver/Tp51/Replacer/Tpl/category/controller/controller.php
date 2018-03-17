@@ -105,6 +105,7 @@ class _models_en_name_ extends Common
         $post = input('post.');
         $model = new model\_models_en_name_();
 _notSetValueComponent_
+
         $flag = $model->isUpdate(false)->save($post);
         $flag ? $this->success('操作成功'):$this->error('操作失败');
     }
@@ -115,6 +116,7 @@ _notSetValueComponent_
         $post = input('post.');
         $model = new model\_models_en_name_();
 _notSetValueComponent_
+
         if($post['_primary_name_'] == $post['_relation_field_']) $this->error('上级不可以是自己');
 
         $flag = $model->isUpdate(true)->save($post);
