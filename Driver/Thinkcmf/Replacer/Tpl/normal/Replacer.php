@@ -26,9 +26,9 @@ class Replacer extends CommonReplacer
 
         foreach($models['component'] as $k => $v){
             $setting = json_decode($v['setting'] ,true);
-            //没开启搜索的 直接跳过
-            if(isset($setting['insearch']) && $setting['insearch'] != 'on') {
 
+            //没开启搜索的 直接跳过
+            if(!isset($setting['insearch'])) {
                 continue;
             }else{
                 if(in_array($v['component_name'] ,$select_component)){
