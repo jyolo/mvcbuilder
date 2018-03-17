@@ -17,6 +17,7 @@ class Replacer extends CommonReplacer
 {
 
     public static function _search_component_($models,$module){
+
         //预定义文本组件作为搜索项的时候
         $text_component = ['text','number','ueditor'];
         //预定义选择组件作为搜索项的时候
@@ -53,6 +54,7 @@ class Replacer extends CommonReplacer
 
 
                     if($v['component_name'] == 'relation'){
+
                         $str .= '{:CMaker("relation")';
                         foreach($setting['base'] as $sk => $sv){
                             $str .= '->'.$sk.'("'.$sv.'")';
@@ -81,6 +83,7 @@ class Replacer extends CommonReplacer
 
 
         }
+
 
 
 
@@ -298,13 +301,14 @@ EOT;
                 case 'relation':
                     $field = explode(',',$setting['base']['field']);
 
+                    $showfield = (isset($field[2]) && strlen($field[2])) ? $field[2] : $field[1];
 
                     $funcStr .= <<<EOT
     //获取器 值得转化
     public function get{$FieldName}Attr(\$value)
     {
         if(!\$value) return '暂无';
-        return \$this->name('{$setting['base']['table']}')->where('{$field[0]}',\$value)->value('{$field[2]}');
+        return \$this->name('{$setting['base']['table']}')->where('{$field[0]}',\$value)->value('{$showfield}');
     }\r\n
 EOT;
                     break;

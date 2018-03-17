@@ -122,6 +122,7 @@ class SqlBuilder extends MvcBuilder
      */
     public function update(){
         if(self::$error != false) return false;
+
         //更新models信息以及表,主键的信息
         if(!$this->updateModels())return false;
 
@@ -366,7 +367,9 @@ class SqlBuilder extends MvcBuilder
         //查询设定主键的类型信息
         $sql = 'SELECT column_name as `name`,COLUMN_TYPE as type FROM information_schema.columns 
           WHERE table_name=\''.config('database.prefix').self::$data['table_name'].'\' AND column_name = \''.$info['primary_name'].'\' ';
+
         $res = Db::query($sql);
+
 
         //检查是否更新主键字段信息
         $update_primary_filed = false;
@@ -385,6 +388,7 @@ class SqlBuilder extends MvcBuilder
                 'type' => self::$data['primary']['type'],
                 'length' => self::$data['primary']['length'],
             ];
+
             $flag = $this->update_field($change ,true);
             if($flag !== true){
                 self::$error = $flag;

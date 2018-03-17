@@ -44,7 +44,7 @@ class Handler extends Driver
             $filepath = $this->config['app_path'].self::$data['file_name'].DIRECTORY_SEPARATOR;
             $arr = [];
             $models = $this->get_models(self::$data['models_id']);
-
+            
             foreach($this->config['folder'] as $k => $v){
                 //文件的小标为数字
                 if($k == '__file__'){

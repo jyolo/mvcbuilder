@@ -298,13 +298,14 @@ EOT;
                 case 'relation':
                     $field = explode(',',$setting['base']['field']);
 
+                    $showfield = (isset($field[2]) && strlen($field[2])) ? $field[2] : $field[1];
 
                     $funcStr .= <<<EOT
     //获取器 值得转化
     public function get{$FieldName}Attr(\$value)
     {
         if(!\$value) return '暂无';
-        return \$this->name('{$setting['base']['table']}')->where('{$field[0]}',\$value)->value('{$field[2]}');
+        return \$this->name('{$setting['base']['table']}')->where('{$field[0]}',\$value)->value('{$showfield}');
     }\r\n
 EOT;
                     break;

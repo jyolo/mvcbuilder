@@ -83,11 +83,18 @@ class ContentBuilder extends MvcBuilder
         $methods = get_class_methods($Replacer);
 
         $arg = [];
+
         foreach($methods as $k => $v){
             //跳过不是替换替换方法的 method
             if(in_array($v,self::$notReplaceMethod)) continue;
             $arg['find'][$k] = $v;
-            $arg['replace'][] = $Replacer::$v(self::$info['models_info'] ,self::$data );
+            try{
+                $arg['replace'][] = $Replacer::$v(self::$info['models_info'] ,self::$data );
+            }catch (\Exception $e){
+                $error = $Replacer .'执行'.$v.'方法时候报错：error :' .$e->getMessage();
+                throw new \Exception($error);
+            }
+
         }
 
         return $arg;
