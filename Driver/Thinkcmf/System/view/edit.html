@@ -165,10 +165,10 @@
                     var index = $(n).index();
 
                     $(n).find('input[type=hidden]').each(function(si,sn){
-                        var newname = $(sn).attr('name').replace(/\[\d?\]/,'['+index+']');
+                        var newname = $(sn).attr('name').replace(/\[\d?\]/,'['+i+']');
                         $(sn).attr('name',newname);
                         if(newname.match(/form_order/)){
-                            $(sn).attr('value',index);
+                            $(sn).attr('value',i);
                         }
                     });
                 });
