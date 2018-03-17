@@ -1,6 +1,6 @@
 <?php
 
-use MvcBuilder\System\tp51\MvcBuilderController;
+use MvcBuilder\Driver\ThinkCmf\System\MvcBuilderController;
 Route::rule('mvcbuilder/:action', function ($action,MvcBuilderController $builderController){
     return $builderController->$action();
 });
