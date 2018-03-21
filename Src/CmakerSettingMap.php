@@ -130,6 +130,36 @@ class CmakerSettingMap
                 'layVerify' => 'required',
             ],
 
+        ],
+        'linkselect' =>[
+            'linkfield' => [
+                'component' => 'text',
+                'label' => '关联字段',
+                'showtype' => 'block',
+                'placeholder' => '格式:cid|wid|gid',
+                'layVerify' => 'required',
+            ],
+            'param' => [
+                'component' => 'text',
+                'label' => '请求参数',
+                'showtype' => 'block',
+                'placeholder' => '格式：type-goods_cat,a-b|type-goods_warehouse ;逗号为',
+                'layVerify' => 'required',
+            ],
+            'showfield' => [
+                'component' => 'text',
+                'label' => '显示字段',
+                'showtype' => 'block',
+                'placeholder' => '格式：id-cat_name|wid-wname ；第一个为value值第二个为option显示',
+                'layVerify' => 'required',
+            ],
+            'serverUrl' => [//数据表
+                'component' => 'text',
+                'label' => '请求地址',
+                'showtype' => 'block',
+                'layVerify' => 'required',
+            ],
+
         ]
     ];
     public static $fieldType = [

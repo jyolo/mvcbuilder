@@ -14,7 +14,22 @@ class MvcBuilderHelper extends CmakerSettingMap
     private $component_attr = '';
     private $component_name ;
     //允许的组件
-    public $allowed_component = ['text','textarea','password','number','radio' ,'checkbox','select','daterange','switchs','hidden','ueditor','webuploader','relation'];
+    public $allowed_component = [
+        'text',
+        'textarea',
+        'password',
+        'number',
+        'radio' ,
+        'checkbox',
+        'select',
+        'daterange',
+        'switchs',
+        'hidden',
+        'ueditor',
+        'webuploader',
+        'linkselect',
+        'relation'
+    ];
     //返回的设置
     public $set = [];
     private $setting ;
