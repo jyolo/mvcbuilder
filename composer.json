@@ -21,7 +21,7 @@
             "MvcBuilder\\System\\":"System/"
         },
         "files": [
-            "src/helper.php"
+            "Src/helper.php"
         ]
     }
 }
