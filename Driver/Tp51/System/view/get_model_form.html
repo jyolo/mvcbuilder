@@ -32,18 +32,17 @@
                     <ul class="layui-tab-title">
                         <li class="layui-this">基础设置</li>
                         <li>字段设置</li>
-                        <li>验证设置</li>
+
                     </ul>
                     <div class="layui-tab-content">
                         <div class="layui-tab-item layui-show">
                             {$setting['base'] | raw}
+                            {$setting['verify'] | raw}
                         </div>
                         <div class="layui-tab-item">
                             {$setting['field'] | raw}
                         </div>
-                        <div class="layui-tab-item">
-                            {$setting['verify'] | raw}
-                        </div>
+
                     </div>
                 </div>
                 <div class="layui-form-item" style="margin-left: 36%">
@@ -111,7 +110,6 @@
             componnet_item.append(msg.data['html']);
             //复制设置选项
             var input_hidden_copy = componnet_item.find('input[type=hidden]').clone();
-
             //添加新的组件
             componnet_item.after(msg.data['new_component']);
             //移除旧的组件
@@ -139,6 +137,7 @@
 
             //使用新的设置选项
             var attrset = msg.data['new_component_attr'];
+
 
             try{
                 //调用前面一个iframe 里面的 function 重新渲染 组件

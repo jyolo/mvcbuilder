@@ -102,7 +102,18 @@ class Replacer extends CommonReplacer
         foreach($models['component'] as $k => $v){
             $setting = json_decode($v['setting'] ,true);
             if(isset($setting['intable']) && $setting['intable'] == 'on'){
-                $cols .= '[\'field\' => \''.$setting['field']['name'].'\',\'title\' => \''.$setting['base']['label'].'\',\'sort\' => true ] ,'."\r\n";
+                if(in_array($v['component_name'] ,['linkselect'])){
+                    $label = explode('|',$setting['base']['label']);
+                    $field = explode('|',$setting['field']['name']);
+                    foreach($label as $sk => $sv){
+                        $cols .= '[\'field\' => \''.$field[$sk].'\',\'title\' => \''.$sv.'\',\'sort\' => true ] ,'."\r\n";
+                    }
+
+                }else{
+                    $cols .= '[\'field\' => \''.$setting['field']['name'].'\',\'title\' => \''.$setting['base']['label'].'\',\'sort\' => true ] ,'."\r\n";
+                }
+
+
             }
         }
 
@@ -251,7 +262,20 @@ EOT;
                 if($sk == $attr)continue;
                 $component .= '->'.$sk.'(\''.$sv.'\')';
             }
-            $component .= '->'.$attr.'($vo[\''.$setting['field']['name'].'\'])';
+
+            if($v['component_name'] == 'linkselect' && $attr == 'value'){
+                $fid = explode('|',$setting['field']['name']);
+                $fvalue = '';
+                foreach($fid as $fk => $fv){
+                    $fvalue .= '$vo[\''.$fv.'\']."|".';
+                }
+                $fvalue = trim($fvalue,'."|".');
+
+                $component .= '->'.$attr.'('.$fvalue.')';
+
+            }else{
+                $component .= '->'.$attr.'($vo[\''.$setting['field']['name'].'\'])';
+            }
 
             $component .= '->name(\''.$setting['field']['name'].'\')';
 
@@ -270,7 +294,7 @@ EOT;
 
         }
 
-        $component .= '{:CMaker(\'hidden\')->name(\''.$models['primary_name'].'\')->value($vo[\''.$models['primary_name'].'\'])->render()}';
+        $component .= "\t\t\t\t".'{:CMaker(\'hidden\')->name(\''.$models['primary_name'].'\')->value($vo[\''.$models['primary_name'].'\'])->render()}';
 
 
         return $component;
@@ -325,14 +349,14 @@ EOT;
                     break;
                 case 'radio':
                 case 'select':
-                    $option = json_encode(explode('|',$setting['base']['option']));
+                    $option = json_encode(self::splitOptionValue($setting['base']['option']));
 
                     $funcStr .= <<<EOT
     //获取器 值得转化
     public function get{$FieldName}Attr(\$value)
     {
         \$status = json_decode('{$option}',true);
-        return \$status[\$value];
+        return (isset(\$status[\$value]) && \$status[\$value]) ? \$status[\$value] : '';
     }\r\n
 EOT;
                     break;
@@ -379,6 +403,11 @@ EOT;
     }\r\n
 EOT;
 
+                    break;
+                case 'linkselect':
+                    p($models);
+                    p($module);
+                    die();
                     break;
             }
 

@@ -17,26 +17,39 @@
         <fieldset class="layui-elem-field" >
             <legend>模型基本信息</legend>
             <div class="layui-field-box" >
-                {:CMaker('text')->label('模型中文名')->name('models_name')->helpinfo('中文')->layVerify('required')->render()}
-                {:CMaker('text')->label('模型英文名')->name('table_name')->helpinfo('英文字母')->layVerify('required')->render()}
-                {:CMaker('text')->label('模型主键')->name('primary[name]')->value('id')->helpinfo('英文字母,默认id')->layVerify('required')->render()}
-                {:CMaker('select')->label('主键类型')->name('primary[type]')->option(['int'=> 'int','varchar' => 'varchar','char' => 'char'])->choose('int')->layVerify('required')->render()}
-                {:CMaker('number')->label('主键长度')->name('primary[length]')->value(11)->layVerify('required')->render()}
-                {:CMaker('select')->label('生成方案')->helpinfo('')->name('tpl_plan')->option($tpl_plan)->layVerify('required')->render()}
+                <div class="layui-tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">模型设置</li>
+                        <li>高级设置</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            {:CMaker('text')->label('模型中文名')->name('models_name')->helpinfo('中文')->layVerify('required')->render()}
+                            {:CMaker('text')->label('模型英文名')->name('table_name')->helpinfo('英文字母')->layVerify('required')->render()}
+                            {:CMaker('select')->label('生成方案')->helpinfo('')->name('tpl_plan')->option($tpl_plan)->layVerify('required')->render()}
+                        </div>
+                        <div class="layui-tab-item">
+                            {:CMaker('text')->label('模型主键')->name('primary[name]')->value('id')->helpinfo('英文字母,默认id')->layVerify('required')->render()}
+                            {:CMaker('select')->label('主键类型')->name('primary[type]')->option(['int'=> 'int','varchar' => 'varchar','char' => 'char'])->choose('int')->layVerify('required')->render()}
+                            {:CMaker('number')->label('主键长度')->name('primary[length]')->value(11)->layVerify('required')->render()}
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </fieldset>
 
 
 
-        <fieldset class="layui-elem-field" style="width: 50%;float: left;">
+        <fieldset class="layui-elem-field" style="width: 60%;float: left;">
             <legend>模型表单预览</legend>
-            <div class="layui-field-box dragula" style="min-height: 300px;">
+            <div class="layui-field-box dragula" style="min-height: 400px;">
 
             </div>
         </fieldset>
 
 
-        <fieldset class="layui-elem-field"  style="width: 45%;float: right;padding:10px;">
+        <fieldset class="layui-elem-field"  style="width: 35%;float: right;padding:10px;">
             <legend>表单组件</legend>
 
             <div class="layui-tab layui-tab-brief" lay-filter="component">
@@ -136,7 +149,10 @@
 
 
                     //统一修改表单的显示形式为inline
-                    $(el).find('.layui-input-block').addClass('layui-input-inline').removeClass('layui-input-block');
+                    if(component_name != 'ueditor'){
+                        $(el).find('.layui-input-block').addClass('layui-input-inline').removeClass('layui-input-block');
+                    }
+
                     //添加编辑按钮
                     $(el).append('<div class="layui-input-inline"><a style="float:right" href="javascript:;" onclick="showsetting(this)"  class="layui-btn" ><i class="fa fa-edit"></i>编辑</a></div>');
                     $(el).append('<input type="hidden" class="__form_order" name="form_order[]" value="">');
@@ -221,8 +237,6 @@
     function reload_component_render(el,component_name,oldid ,attrset ){
 
 
-
-
         //如果有组件脚本的 则 重新渲染
         if((oldid+'_attr' in window)){
             $(el).find('.'+component_name).removeAttr('lay-key');
@@ -238,12 +252,21 @@
                 var find_id = oldid;
 
             }
+            // p(attrset);
+            // p(find_id);
+            // p(setting);
+            if($(el).find('.'+component_name).length == 0){
+                //组件内有多个组件class的时候替换 id
+                var id_str = $(el).attr('id').replace(find_id,newid);
+                $(el).attr('id',id_str);
+            }else{
+                //组件内有多个组件class的时候替换 id
+                $(el).find('.'+component_name).each(function(i,n){
+                    var id_str = $(n).attr('id').replace(find_id,newid);
+                    $(n).attr('id',id_str);
+                });
+            }
 
-            //组件内有多个组件class的时候替换 id
-            $(el).find('.'+component_name).each(function(i,n){
-                var id_str = $(n).attr('id').replace(find_id,newid);
-                $(n).attr('id',id_str);
-            });
 
             //如果是编辑器 则先把里面的 子元素 删除，否则会渲染两次
             if(component_name == 'ueditor'){$('#'+newid).children().remove();}

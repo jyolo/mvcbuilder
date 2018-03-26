@@ -248,10 +248,18 @@
             }
 
             //组件内有多个组件class的时候替换 id
-            $(el).find('.'+component_name).each(function(i,n){
-                var id_str = $(n).attr('id').replace(find_id,newid);
-                $(n).attr('id',id_str);
-            });
+
+            if($(el).find('.'+component_name).length == 0){
+                //组件内有多个组件class的时候替换 id
+                var id_str = $(el).attr('id').replace(find_id,newid);
+                $(el).attr('id',id_str);
+            }else{
+                //组件内有多个组件class的时候替换 id
+                $(el).find('.'+component_name).each(function(i,n){
+                    var id_str = $(n).attr('id').replace(find_id,newid);
+                    $(n).attr('id',id_str);
+                });
+            }
 
 
             //如果是编辑器 则先把里面的 子元素 删除，否则会渲染两次

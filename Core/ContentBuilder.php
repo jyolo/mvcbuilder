@@ -16,7 +16,7 @@ class ContentBuilder extends MvcBuilder
 
     private static $tplPath = null; //driver 的 tpl 路径
     private static $info ; //要处理的文件的信息
-    private static $notReplaceMethod = ['tosplitKeyToValue'];
+    private static $notReplaceMethod = ['tosplitKeyToValue','splitOptionValue']; // 定义不被替换的方法
 
     public static function create($info){
         if(self::$tplPath == null)self::$tplPath = self::getTplPath();

@@ -172,13 +172,14 @@ class CmakerSettingMap
 
         'DATE' => 'DATE',
         'DATETIME' => 'DATETIME',
+        'DECIMAL' => 'DECIMAL',
         //数字类型
         'SMALLINT' => 'SMALLINT',
         'MEDIUMINT' => 'MEDIUMINT',
         'BIGINT' => 'BIGINT',
         'FLOAT' => 'FLOAT',
         'DOUBLE' => 'DOUBLE',
-        'DECIMAL' => 'DECIMAL',
+
         //字符串类型
         'CHAR' => 'CHAR',
         'TINYBLOB' => 'TINYBLOB',
@@ -225,7 +226,7 @@ class CmakerSettingMap
 
     //每个组件所用设置组件的 值 显示的属性
     public static $setComponentsStatusAttr = [
-        'text|number|textarea|password|hidden|ueditor|webuploader' => 'value',
+        'text|number|textarea|password|hidden|ueditor|webuploader|linkselect' => 'value',
         'switchs' => 'open',
         'select|radio|checkbox|relation' => 'choose',
     ];
@@ -249,6 +250,28 @@ class CmakerSettingMap
         }
         unset($temArr);
         return $arr;
+    }
+
+    /**
+     *
+     */
+    public static function splitOptionValue($str){
+
+        if(strpos($str,'|')){
+            $return = [];
+            $arr = explode('|' ,$str);
+            foreach ($arr as $k => $v){
+
+                if(strpos($v,'-')){
+                    $arg = explode('-',$v);
+                    $return[$arg[0]] = $arg[1];
+                }else{
+                    $return[$k] = $v;
+                }
+            }
+
+            return $return;
+        }
     }
 
 }

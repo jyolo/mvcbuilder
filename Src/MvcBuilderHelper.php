@@ -256,19 +256,19 @@ class MvcBuilderHelper extends CmakerSettingMap
             ->name('verify[layVerify]')
             ->render();
 
-        $str .= Maker::build('text')
-            ->label('服务端验证规则')
-            ->value(isset($this->setting['verify']['serverVerfy']) ? $this->setting['verify']['serverVerfy'] : '')
-            ->helpinfo('多个值用" | "分隔')
-            ->name('verify[serverVerfy]')
-            ->render();
+//        $str .= Maker::build('text')
+//            ->label('服务端验证规则')
+//            ->value(isset($this->setting['verify']['serverVerfy']) ? $this->setting['verify']['serverVerfy'] : '')
+//            ->helpinfo('多个值用" | "分隔')
+//            ->name('verify[serverVerfy]')
+//            ->render();
 
-        $str .= Maker::build('text')
-            ->label('服务端验证提示')
-            ->value(isset($this->setting['verify']['serverVerfy_msg']) ? $this->setting['verify']['serverVerfy_msg'] : '')
-            ->helpinfo('多个值用" | "分隔')
-            ->name('verify[serverVerfy_msg]')
-            ->render();
+//        $str .= Maker::build('text')
+//            ->label('服务端验证提示')
+//            ->value(isset($this->setting['verify']['serverVerfy_msg']) ? $this->setting['verify']['serverVerfy_msg'] : '')
+//            ->helpinfo('多个值用" | "分隔')
+//            ->name('verify[serverVerfy_msg]')
+//            ->render();
 
         return $str;
     }
