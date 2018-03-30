@@ -1,7 +1,7 @@
 <?php
 namespace app\_module_name_\model;
 use think\Model;
-
+use think\Db;
 /**
  * 自动化模型的model模板文件
  */

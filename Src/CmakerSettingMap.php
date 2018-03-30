@@ -38,22 +38,67 @@ class CmakerSettingMap
                 'label' => '输入框提示文本',
             ],
         ],
-        'daterange' => [
+        'datepicker' => [
             //key 和组件的attr 对应
+            'type' => [
+                'component' => 'select', //使用哪个组件
+                'label' => '类型', // 组件的属性
+                'helpinfo' => '选择分隔符则代表开启区间选择',
+                'option' => [
+                    'date' => '日期选择器[ 默认值 ]',
+                    'datetime' => '时间选择器[ 可选年、月、日、时、分、秒 ]',
+                    'year' => '年选择器[ 只提供年列表选择 ]',
+                    'month' => '年月选择器[ 只提供年、月选择 ]',
+                    'time' => '时间选择器[ 只提供时、分、秒选择 ]',
+                ],
+                'choose' => 'date',
+                'layVerify' => 'required',
+            ],
+
+            'lang' => [
+                'component' => 'radio', //使用哪个组件
+                'label' => '语言', // 组件的属性
+                'option' => [
+                    'cn' => '中文',
+                    'en' => '英文',
+                ],
+                'choose' => 'cn',
+                'layVerify' => 'required',
+            ],
+            'theme' => [
+                'component' => 'radio', //使用哪个组件
+                'label' => '主题', // 组件的属性
+                'option' => [
+                    'default' => '默认简约',
+                    'molv' => '墨绿背景',
+                    'grid' => '格子主题',
+                ],
+                'choose' => 'default',
+                'layVerify' => 'required',
+            ],
+            'format' => [
+                'component' => 'text', //使用哪个组件
+                'label' => '自定义格式', // 组件的属性
+                'placeholder' => 'yyyy-MM-dd HH:mm:ss',
+                'helpinfo' => 'yyyy年MM月dd日 HH时mm分ss秒	等于 2017年08月18日 20时08分08秒',
+                'layVerify' => '',
+            ],
+
             'range' => [
                 'component' => 'select', //使用哪个组件
                 'label' => '时间分隔符', // 组件的属性
-                'helpinfo' => '',
+                'helpinfo' => '选择分隔符则代表开启区间选择',
                 'option' => [
                     '-' => '-',
                     '~' => '~'
                 ],
-                'layVerify' => 'required',
+                'layVerify' => '',
             ],
             'readonly' => [
                 'component' => 'switchs',
                 'label' => '只读',
                 'text' => '是|否',
+                'open' => '1',
                 'helpinfo' => '',
             ],
         ],

@@ -347,10 +347,23 @@ EOT;
 
 
                     break;
-                case 'radio':
+
                 case 'select':
                     $option = json_encode(self::splitOptionValue($setting['base']['option']));
 
+                    $funcStr .= <<<EOT
+    //获取器 值得转化
+    public function get{$FieldName}Attr(\$value)
+    {
+        \$status = json_decode('{$option}',true);
+        return (isset(\$status[\$value]) && \$status[\$value]) ? \$status[\$value] : '';
+    }\r\n
+EOT;
+                    break;
+                case 'radio':
+                    $option = json_encode(self::splitOptionValue($setting['base']['option']));
+                    p($option);
+                    die();
                     $funcStr .= <<<EOT
     //获取器 值得转化
     public function get{$FieldName}Attr(\$value)

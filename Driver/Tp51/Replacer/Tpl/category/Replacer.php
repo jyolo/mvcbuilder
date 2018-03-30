@@ -148,6 +148,7 @@ class Replacer extends CommonReplacer
         return $models['primary_name'];
     }
 
+
     public static function _add_form_component_($models){
         $component = '';
         foreach($models['component'] as $k => $v){
@@ -259,7 +260,17 @@ EOT;
         $funcStr = '';
         foreach($models['component'] as $k => $v){
             $setting = json_decode($v['setting'] ,true);
-            $FieldName = ucfirst($setting['field']['name']);
+            if(strpos($setting['field']['name'] ,'_')){
+                $arr = explode('_',$setting['field']['name']);
+                $temp_str = '';
+                foreach($arr as $sk => $sv){
+                    $temp_str .= ucfirst($sv);
+                }
+                $FieldName = $temp_str;
+            }else{
+                $FieldName = ucfirst($setting['field']['name']);
+            }
+
 
             switch($v['component_name']){
                 case 'checkbox':
@@ -299,7 +310,6 @@ EOT;
 
 
                     break;
-                case 'radio':
                 case 'select':
                     $option = json_encode(explode('|',$setting['base']['option']));
 
@@ -312,9 +322,23 @@ EOT;
     }\r\n
 EOT;
                     break;
-                case 'relation':
-                    $field = explode(',',$setting['base']['field']);
+                case 'radio':
+                    $option = json_encode(self::splitOptionValue($setting['base']['option']));
+
                     $funcStr .= <<<EOT
+    //获取器 值得转化
+    public function get{$FieldName}Attr(\$value)
+    {
+        \$status = json_decode('{$option}',true);
+        return (isset(\$status[\$value]) && \$status[\$value]) ? \$status[\$value] : '';
+    }\r\n
+EOT;
+                    break;
+                case 'relation':
+                    //自己模型 不转化 自己的pid
+                    if($models['table_name'] == $setting['base']['table'] ){
+
+                        $funcStr .= <<<EOT
     //获取器 值得转化
     public function set{$FieldName}Attr(\$value)
     {
@@ -322,10 +346,28 @@ EOT;
         return \$value;
     }\r\n
 EOT;
+                    }else{
+                        $relation_field = explode(',',$setting['base']['field']);
+                        $pk = $relation_field[0];
+                        $value = array_pop($relation_field);
+
+                        $funcStr .= <<<EOT
+    //获取器 值得转化
+    public function get{$FieldName}Attr(\$value)
+    {
+        if(!strlen(\$value)) return 0;
+        \$res = Db::name('{$setting['base']['table']}')->where('{$relation_field[0]}' ,'=',\$value)->value('{$value}');
+        return \$res;
+    }\r\n
+EOT;
+
+                    }
+
+
                     break;
                 case 'webuploader':
                     $funcStr .= <<<EOT
-    function set{$FieldName}Attr(\$value){
+    public function set{$FieldName}Attr(\$value){
         if(\$value != false){
             if(is_array(\$value)) return join(',',\$value);
             return \$value;
@@ -363,8 +405,10 @@ EOT;
         $relation_field = '';
         //获取关系型字段
         foreach($models['component'] as $k => $v){
-            if($v['component_name'] == 'relation'){
-                $setting = json_decode($v['setting'] ,true);
+            $setting = json_decode($v['setting'] ,true);
+            if($v['component_name'] == 'relation' && $models['table_name'] == $setting['base']['table']){
+
+
                 $relation_field = $setting['base']['field'];
             }
         }
@@ -373,7 +417,7 @@ EOT;
         $relation_field = $field_arr[1];
         $key_field = $field_arr[0];
         $str =<<<EOT
-function setPathAttr(\$value,\$data){
+public function setPathAttr(\$value,\$data){
         if(isset(\$data['{$relation_field}']) && strlen(\$data['{$relation_field}'])){
 
             if(\$data['{$relation_field}'] == 0 || \$data['{$relation_field}'] == null) return 0;
@@ -409,12 +453,35 @@ EOT;
         return '\'\'';
     }
 
-    public static function _relation_field_($models,$module){
+    public static function _relation_field_all_($models,$module){
+
         foreach($models['component'] as $k => $v){
-            if($v['component_name'] == 'relation'){
-                $setting = json_decode($v['setting'] ,true);
-                return $setting['field']['name'];
+
+            $setting = json_decode($v['setting'] ,true);
+            if($models['table_name'] == $setting['base']['table'] ){
+
+                return $setting['base']['field'];
             }
+
+//            if($v['component_name'] == 'relation'){
+//                $setting = json_decode($v['setting'] ,true);
+//                return $setting['field']['name'];
+//            }
+        }
+
+    }
+
+
+    public static function _relation_field_($models,$module){
+
+        foreach($models['component'] as $k => $v){
+
+            $setting = json_decode($v['setting'] ,true);
+            if($models['table_name'] == $setting['base']['table'] ){
+
+                 return $setting['field']['name'];;
+            }
+
         }
 
     }

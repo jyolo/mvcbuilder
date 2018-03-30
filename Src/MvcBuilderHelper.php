@@ -22,7 +22,7 @@ class MvcBuilderHelper extends CmakerSettingMap
         'radio' ,
         'checkbox',
         'select',
-        'daterange',
+        'datepicker',
         'switchs',
         'hidden',
         'ueditor',

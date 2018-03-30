@@ -96,7 +96,8 @@ class MvcBuilderController extends Controller{
             $componet .= Maker::build('hidden')->classname('__form_order')->name('form_order['.$k.']')->value($k)->render();
             $componet .= Maker::build('hidden')->classname('__component_name')->name('component_name['.$k.']')->value($v['component_name'])->render();
 
-            $setting_key = uniqid();
+            //生成唯一值
+            $setting_key = md5( uniqid('',true).uniqid('',true) );
             cache($setting_key ,$v['setting'],86400);
             $componet .= Maker::build('hidden')->classname('__setting')->name('setting['.$k.']')->value($setting_key)->render();
             $componet .= '</div>';
@@ -163,7 +164,7 @@ class MvcBuilderController extends Controller{
         if(isset($post['setting_key']) && is_array(json_decode(cache($post['setting_key']) , true))){
             $setting_key = $post['setting_key'];
         }else{
-            $setting_key = uniqid();
+            $setting_key = md5( uniqid('',true).uniqid('',true) );
         }
 
 

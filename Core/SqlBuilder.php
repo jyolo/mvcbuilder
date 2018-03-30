@@ -65,6 +65,7 @@ class SqlBuilder extends MvcBuilder
 
         $new_post = [];
         foreach($post['setting'] as $k => $v){
+
             if(!cache($v)){
                 self::$error = '第'.($k+1).'个'.$post['component_name'][$k].'请先设置组件';
                 return self::$_instance;
@@ -79,6 +80,7 @@ class SqlBuilder extends MvcBuilder
             $arg['component_name'] = $post['component_name'][$k];
 
             $new_post[$k] = $arg;
+
             //编辑的id
             if(isset($post['component_id'][$k]) && intval($post['component_id'][$k])) {
                 $new_post[$k]['component_id'] = $post['component_id'][$k];
@@ -91,8 +93,6 @@ class SqlBuilder extends MvcBuilder
         $data['component'] = $new_post;
 
         self::$data = $data;
-
-
 
         return self::$_instance;
     }
@@ -287,6 +287,7 @@ class SqlBuilder extends MvcBuilder
                 $up_data[$k]['update_time'] = $now;
 
             }
+
             //有字段更新的 则先更新字段
             if(isset($field_change) && count($field_change)){
                 $flag = $this->update_field($field_change);

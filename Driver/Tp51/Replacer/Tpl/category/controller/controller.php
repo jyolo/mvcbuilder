@@ -35,40 +35,33 @@ class _models_en_name_ extends Common
             $post = input('post.');
             $model = new model\_models_en_name_();
 
-            if(isset($post['relation_field']) && strlen($post['relation_field'])){
+            $relation_field_str = '_relation_field_all_';
+            $relation_field = explode(',',$relation_field_str);
 
-                $relation_field = explode(',',$post['relation_field']);
+            if(isset($post['where']) && count($post['where'])){
 
-                if(isset($post['where']) && count($post['where'])){
+                $pid = (isset($post['where'][$relation_field[1]]) && $post['where'][$relation_field[1]])
+                    ? $post['where'][$relation_field[1]] : false;
 
-                    $pid = (isset($post['where'][$relation_field[1]]) && $post['where'][$relation_field[1]])
-                        ? $post['where'][$relation_field[1]] : false;
-
-                    if($pid){
-                        $model = $model->where('','exp','instr(path ,"'.$pid.'")');
-                        unset($post['where'][$relation_field[1]]);
-                    }
-                    $where = _parseWhere($post['where']);
-                    $model = $model->where($where);
+                if($pid){
+                    $model = $model->where('','exp','instr(path ,"'.$pid.'")');
+                    unset($post['where'][$relation_field[1]]);
                 }
-
-                $list = $model->select()->toArray();
-
-                $config['treeData'] = $list;
-                $config['field'] = $post['relation_field'];
-
-                $return['data'] = Component::get_tree_array($config,true);
-                sort($return['data']);//从新排序下标从0开始，否则layui table 多选以及字段排序会出问题。
-                $return['code'] = 0;
-                $return['count'] = count($list);
-
-                return json($return);
-            }else{
-                $return['code'] = 1;
-                $return['data'] = [];
-                $return['error_msg'] = '缺少relation_field参数';
-                return json($return);
+                $where = _parseWhere($post['where']);
+                $model = $model->where($where);
             }
+
+            $list = $model->select()->toArray();
+
+            $config['treeData'] = $list;
+            $config['field'] = $relation_field_str;
+
+            $return['data'] = Component::get_tree_array($config,true);
+            sort($return['data']);//从新排序下标从0开始，否则layui table 多选以及字段排序会出问题。
+            $return['code'] = 0;
+            $return['count'] = count($list);
+
+            return json($return);
 
 
         }
