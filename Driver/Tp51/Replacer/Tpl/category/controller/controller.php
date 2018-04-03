@@ -57,7 +57,6 @@ class _models_en_name_ extends Common
             $config['field'] = $relation_field_str;
 
             $return['data'] = Component::get_tree_array($config,true);
-            sort($return['data']);//从新排序下标从0开始，否则layui table 多选以及字段排序会出问题。
             $return['code'] = 0;
             $return['count'] = count($list);
 
