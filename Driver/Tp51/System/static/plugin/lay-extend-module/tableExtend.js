@@ -224,6 +224,37 @@ layui.define(['table'],function (exports) {
 
             }
         },
+        _edit:function(obj){
+
+            var tableID = handler.tableID;
+            var table_attr = window[tableID+'_attr'];
+
+            var set = table_attr.set;
+            var url  = set.editUrl ;
+            var param = {};
+            param[obj.field] = obj.value;
+            param['id'] = obj.data.id;
+
+            $.post(url,param,function(msg){
+                if(msg.code == 1){
+                    if(set.editReload == true){
+                        table.reload(tableID);
+                    }else{
+                        layer.load(3 ,{time: 500});
+                    }
+
+                }else{
+                    parent.layer.msg(msg.msg, {
+                        icon:5,
+                        time: 200 ,
+                        shade: 0.5
+                    });
+                }
+
+            });
+
+
+        },
         /**
          * table 自动化渲染完成 以及 reload 重载之后 统计某一列的数字之和
          * 自动化渲染需要配置  done:layui.LinkHandler.tableDone
