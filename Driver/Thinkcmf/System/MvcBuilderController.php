@@ -31,7 +31,7 @@ class MvcBuilderController extends Controller{
     public function index(){
         if(Request::instance()->isGet()){
 
-            return $this->fetch(__DIR__ . '/view/index.html');
+            return $this->fetch(__DIR__ . '/../../../view/index.html');
         }
 
         if(Request::instance()->isPost()){
@@ -57,7 +57,7 @@ class MvcBuilderController extends Controller{
 
         $this->assign('tpl_plan' ,$tpl_plan);
 
-        return $this->fetch(__DIR__ . '/view/add.html');
+        return $this->fetch(__DIR__ . '/../../../view/add.html');
     }
 
 
@@ -107,7 +107,7 @@ class MvcBuilderController extends Controller{
         $this->assign('models',$models);
         $this->assign('componet' ,$componet);
 
-        return $this->fetch(__DIR__ . '/view/edit.html');
+        return $this->fetch(__DIR__ . '/../../../view/edit.html');
 
     }
 
@@ -142,7 +142,7 @@ class MvcBuilderController extends Controller{
         //设置的dom
         $this->assign('setting' ,$setting_dom);
 
-        return $this->fetch(__DIR__ . '/view/get_model_form.html');
+        return $this->fetch(__DIR__ . '/../../../view/get_model_form.html');
 
     }
 
@@ -280,7 +280,7 @@ class MvcBuilderController extends Controller{
         $models = self::$models->select()->toArray();
 
         $this->assign('models' ,$models);
-        return $this->fetch(__DIR__ . '/view/build.html');
+        return $this->fetch(__DIR__ . '/../../../view/build.html');
     }
 
     /**
