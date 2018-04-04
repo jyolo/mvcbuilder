@@ -92,10 +92,12 @@ class Replacer extends CommonReplacer
     public static function _table_($models,$module){
 
         $url = url($module['file_name'].'/'.$models['table_name'].'/index');
+        $editurl = url($module['file_name'].'/'.$models['table_name'].'/edit_action');
 
         $cols = '['."\r\n";
         $cols .=    '[\'type\'=>\'checkbox\'] ,'."\r\n";
-
+        //显示排序 固定的field 值 =》listorder　，
+        $cols .= '[\'field\' => "listorder",\'title\' => \'排序\',\'edit\' => \'text\' ],'."\r\n";
         //显示模型的主键
         $cols .= '[\'field\' => "'.$models['primary_name'].'",\'title\' => \''.$models['primary_name'].'\',\'sort\' => true ],'."\r\n";
 
@@ -128,6 +130,7 @@ class Replacer extends CommonReplacer
         $str .= '->page(true)';
         $str .= '->limit(10)';
         $str .= '->url(\''.$url.'\')';
+        $str .= '->editUrl(\''.$editurl.'\')';
         $str .= '->render()';
         $str .= '}';
 

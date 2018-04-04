@@ -257,8 +257,8 @@ class CmakerSettingMap
             'defualt_value' => '0',
         ],
         'select|radio|checkbox|relation' => [
-            'type' => 'varchar',
-            'length' => '100',
+            'type' => 'INT',
+            'length' => '11',
             'defualt_value' => '',
         ],
         'switch' => [

@@ -19,6 +19,13 @@ class SqlBuilder extends MvcBuilder
     //自动写入的字段
     public $autoInsertField = [
         [
+            'name' => 'listorder',
+            'type' => 'int',
+            'length' => '11',
+            'defualt_value' => '0',
+            'comment' => '排序',
+        ],
+        [
             'name' => 'add_time',
             'type' => 'datetime',
             'length' => '',

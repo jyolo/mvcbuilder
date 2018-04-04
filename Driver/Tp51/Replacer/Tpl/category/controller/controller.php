@@ -55,7 +55,6 @@ class _models_en_name_ extends Common
 
             $config['treeData'] = $list;
             $config['field'] = $relation_field_str;
-
             $return['data'] = Component::get_tree_array($config,true);
             $return['code'] = 0;
             $return['count'] = count($list);
@@ -109,7 +108,8 @@ _notSetValueComponent_
         $model = new model\_models_en_name_();
 _notSetValueComponent_
 
-        if($post['_primary_name_'] == $post['_relation_field_']) $this->error('上级不可以是自己');
+        if(isset($post['_relation_field_']) && $post['_primary_name_'] == $post['_relation_field_']) $this->error('上级不可以是自己');
+
 
         $flag = $model->isUpdate(true)->save($post);
         $new_data = $model->find($post['_primary_name_'])->toArray();
@@ -122,7 +122,7 @@ _notSetValueComponent_
         $post = input('post.');
         $model = new model\_models_en_name_();
 
-        $childs = $model->where('','exp','instr(path,",'.$post['_primary_name_'].',")')->select();
+        $childs = $model->where('','exp','instr(path,",'.$post['_primary_name_'].'")')->select();
         if(count($childs) > 0)$this->error('请先删除子类');
 
         $flag = $model->where('_primary_name_','=',$post['_primary_name_'])->delete();
@@ -139,7 +139,7 @@ _notSetValueComponent_
         if(!isset($post['ids']))$this->error('请选选择');
         $list = $model->where('_primary_name_','in',$post['ids'])->select()->toArray();
         foreach($list as $k => $v){
-            $childs = $model->where('','exp','instr(path,",'.$v['_primary_name_'].',")')->count();
+            $childs = $model->where('','exp','instr(path,",'.$v['_primary_name_'].'")')->count();
             if($childs > 0)$this->error('请先删除子类');
         }
 

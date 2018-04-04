@@ -41,7 +41,7 @@ class _models_en_name_ extends Common
 
             $model = new model\_models_en_name_();
 
-            $res = $model->where($where)->page($post['page'] ,$post['limit'])->select()->toArray();
+            $res = $model->where($where)->page($post['page'] ,$post['limit'])->order('add_time desc')->select()->toArray();
             //当前分页没有数据，但总数还是有的
             //fixed 第二页数据删除完了之后 layuitable reload 不会自动跳转到 第一页
             if(!count($res) && $model->count($model->getPk()) > 0){

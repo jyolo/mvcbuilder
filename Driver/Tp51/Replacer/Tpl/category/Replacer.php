@@ -94,10 +94,13 @@ class Replacer extends CommonReplacer
 
 
         $url = url($module['file_name'].'/'.$models['table_name'].'/index');
+        $editurl = url($module['file_name'].'/'.$models['table_name'].'/edit_action');
 
         $cols = '['."\r\n";
         $cols .=    '[\'type\'=>\'checkbox\'] ,'."\r\n";
 
+        //显示排序 固定的field 值 =》listorder　，
+        $cols .= '[\'field\' => "listorder",\'title\' => \'排序\',\'edit\' => \'text\' ],'."\r\n";
         //显示模型的主键
         $cols .= '[\'field\' => "'.$models['primary_name'].'",\'title\' => \''.$models['primary_name'].'\',\'sort\' => true ],'."\r\n";
 
@@ -105,12 +108,14 @@ class Replacer extends CommonReplacer
         foreach($models['component'] as $k => $v){
             $setting = json_decode($v['setting'] ,true);
             //如果是关联选择 则通过table传递 关系字段
-            if($v['component_name'] == 'relation'){
-                $param['relation_field'] = $setting['base']['field'];
-            }
 
             if(isset($setting['intable']) && $setting['intable'] == 'on'){
-                $cols .= '[\'field\' => \''.$setting['field']['name'].'\',\'title\' => \''.$setting['base']['label'].'\',\'sort\' => true ] ,'."\r\n";
+                if($v['component_name'] == 'relation' && $setting['base']['showtype'] == 'treeSelect'){
+                    //$param['relation_field'] = $setting['base']['field'];
+                    $cols .= '[\'field\' => \''.$setting['field']['name'].'\',\'title\' => \''.$setting['base']['label'].'\',\'width\' => \'18%\' ] ,'."\r\n";
+                }else{
+                    $cols .= '[\'field\' => \''.$setting['field']['name'].'\',\'title\' => \''.$setting['base']['label'].'\',\'sort\' => true ] ,'."\r\n";
+                }
             }
         }
 
@@ -124,6 +129,7 @@ class Replacer extends CommonReplacer
         $str .= '->cols('.$cols.')';
         $str .= '->page(true)';
         $str .= '->url(\''.$url.'\')';
+        $str .= '->editUrl(\''.$editurl.'\')';
         $param_arr = '';
         if(count($param)){
             $param_arr .= '[';
@@ -422,15 +428,16 @@ public function setPathAttr(\$value,\$data){
 
             if(\$data['{$relation_field}'] == 0 || \$data['{$relation_field}'] == null) return 0;
             \$parent_path = \$this->where('{$key_field}', \$data['{$relation_field}'])->value('path');
+            \$parent_path = trim(\$parent_path ,',');
             \$parent_path = !strlen(\$parent_path) ? 0 : trim(\$parent_path ,',') ;
-            return \$parent_path.','.\$data['{$relation_field}'] .',';
+            return \$parent_path.','.\$data['{$relation_field}'] ;
 
         }else{//排序的时候是没有赋值 parentid
 
             if(isset(\$data['{$key_field}']) && \$data['{$key_field}'] > 0){
                 \$parent_path = \$this->where('{$key_field}' , \$data['{$key_field}'])->value('path');
                 \$parent_path = !strlen(\$parent_path) ? 0 :\$parent_path ;
-                return \$parent_path .',';
+                return ','.\$parent_path;
             }else{
                 return 0;
             }
