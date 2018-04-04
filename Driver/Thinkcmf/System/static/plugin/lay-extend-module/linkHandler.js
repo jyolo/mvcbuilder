@@ -152,6 +152,8 @@ layui.define(['table','tableExtend'],function (exports) {
 
                 //检查是否有定义回调
                 var callback = $(button).attr('data-call-back') ? $(button).attr('data-call-back') : false ;
+                var error_callback = $(button).attr('data-error-call-back') ? $(button).attr('data-error-call-back') : false ;
+
                 var table_index = $(button).attr('table_index');
 
                 var loder;
@@ -175,6 +177,15 @@ layui.define(['table','tableExtend'],function (exports) {
                                 icon:5,
                                 time: 1600 ,
                                 shade: 0.5
+                            },function(){
+                                if(error_callback !== false){
+                                    var functionname = new Function("return "+error_callback)();
+                                    if(typeof functionname == 'function'){
+                                        functionname(msg);
+                                    }
+                                    return;
+                                }
+                                return ;
                             });
                         }
                         else
@@ -198,31 +209,22 @@ layui.define(['table','tableExtend'],function (exports) {
                                     return ;
                                 }
 
-
-
                                 //如果全局的listTable 不为 undefined 则自动 reload
                                 if(typeof parent.listTable != 'undefined'){
                                     parent.listTable.msg = msg;
                                 }else{
                                     //单独单开iframe
                                     parent.table.msg = msg
-
                                 }
 
                                //关闭所有的弹窗
                                parent.layer.closeAll();
-
-
-
-
 
                                 //如果传递了连接 则完成后跳转
                                 if(msg.url){
                                     window.location.href = msg.url;
                                     return;
                                 }
-
-
 
                             });
                         }

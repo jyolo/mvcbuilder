@@ -115,7 +115,7 @@ layui.define(['table'],function (exports) {
                     var callback ={
                         end : function () {
                             //if(parent.listTable == 'undefined')return;
-                            p(window.table);
+                            // p(window.table);
                             try{
                                 //通过linkhandler submit 方法里面 把全局的listtable 赋值了msg 对象 无刷新即时修改表格
                                 // if(typeof parent.listTable.msg == 'object' && parent.listTable.msg.code == 1){
@@ -166,7 +166,23 @@ layui.define(['table'],function (exports) {
                                             case 'del':
                                                 //删除最后一条的时候 table 进行 reload
                                                 if(obj.tr.siblings().length == 0){
-                                                    table.reload('listTable')
+
+                                                    var component_table = [];
+                                                    //根据组件的设置 ,找出table
+                                                    $.each(window.component_set ,function(i,n){
+                                                        if(n.component_name == 'table'){
+                                                            //component_table.push(n)
+                                                            component_table.push(n);
+                                                        }
+                                                    });
+                                                    //前面iframe里面只有一个table的时候
+                                                    if(component_table.length == 1){
+                                                        var table_id = component_table[0].uniqid_id;
+                                                        table.reload(table_id);
+                                                    }else{
+                                                        //多个的时候 暂未处理
+                                                    }
+
                                                 }else{
                                                     obj.del();
                                                 }
@@ -207,6 +223,37 @@ layui.define(['table'],function (exports) {
                     break;
 
             }
+        },
+        _edit:function(obj){
+
+            var tableID = handler.tableID;
+            var table_attr = window[tableID+'_attr'];
+
+            var set = table_attr.set;
+            var url  = set.editUrl ;
+            var param = {};
+            param[obj.field] = obj.value;
+            param['id'] = obj.data.id;
+
+            $.post(url,param,function(msg){
+                if(msg.code == 1){
+                    if(set.editReload == true){
+                        table.reload(tableID);
+                    }else{
+                        layer.load(3 ,{time: 500});
+                    }
+
+                }else{
+                    parent.layer.msg(msg.msg, {
+                        icon:5,
+                        time: 200 ,
+                        shade: 0.5
+                    });
+                }
+
+            });
+
+
         },
         /**
          * table 自动化渲染完成 以及 reload 重载之后 统计某一列的数字之和
