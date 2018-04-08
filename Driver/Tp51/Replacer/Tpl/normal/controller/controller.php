@@ -15,14 +15,14 @@ use think\facade\Request;
 
 
 /**
- * [menu]角色管理[/menu]
+ * 角色管理
  */
 class _models_en_name_ extends Common
 {
 
 
     /**
-     * [menu]查看[/menu]
+     * 查看
      */
     public function index(){
 
@@ -59,13 +59,13 @@ class _models_en_name_ extends Common
 
     }
     /**
-     * [menu]添加[/menu]
+     * 添加
      */
     public function add(){
         return $this->fetch();
     }
     /**
-     * [menu]编辑[/menu]
+     * 编辑
      */
     public function edit(){
         $id = intval(input('param._primary_name_'));
@@ -82,7 +82,7 @@ class _models_en_name_ extends Common
     }
 
     /**
-     * [menu]保存添加[/menu]
+     * 保存添加
      */
     public function add_action(){
         $post = input('post.');
@@ -93,7 +93,7 @@ _notSelectTopCat_
         $flag ? $this->success('操作成功'):$this->error('操作失败');
     }
     /**
-     * [menu]保存编辑[/menu]
+     * 保存编辑
      */
     public function edit_action(){
         $post = input('post.');
@@ -105,7 +105,7 @@ _notSelectTopCat_
         $flag ? $this->success('操作成功','',$new_data):$this->error('操作失败');
     }
     /**
-     * [menu]删除[/menu]
+     * 删除
      */
     public function del(){
         $post = input('post.');
@@ -115,7 +115,7 @@ _notSelectTopCat_
     }
 
     /**
-     * [menu]批量删除[/menu]
+     * 批量删除
      */
     public function pdel(){
         $post = input('post.');

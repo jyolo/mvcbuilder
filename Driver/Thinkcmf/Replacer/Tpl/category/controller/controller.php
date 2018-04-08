@@ -15,7 +15,7 @@ use think\facade\Request;
 
 
 /**
- * [menu]角色管理[/menu]
+ * 角色管理
  */
 class _models_en_name_ extends Common
 {
