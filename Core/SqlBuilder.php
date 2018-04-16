@@ -186,7 +186,7 @@ class SqlBuilder extends MvcBuilder
         if(count($up['new'])){
             //返回新增的组件的id
             $cids = $this->add_component($up['new']);
-            //p($cids);
+            if($cids == false) return false;
         }
         if(count($up['update'])){
             $flag = $this->update_component($up['update']);

@@ -9,6 +9,7 @@ use CMaker\Maker;
 use MvcBuilder\MvcBuilder;
 use MvcBuilder\MvcBuilderHelper;
 use MvcBuilder\MvcBuilderUploader;
+use MvcBuilder\Core\MenuMaker;
 use think\Db;
 
 class MvcBuilderController extends Controller{
@@ -28,11 +29,11 @@ class MvcBuilderController extends Controller{
 
 
     /**
-     * [menu]查看[/menu]
+     * 查看
      */
     public function index(){
         if(Request::isGet()){
-            return $this->fetch(__DIR__ . '/../../../view/index.html');
+            return $this->fetch(__DIR__ . '/../../../View/index.html');
         }
 
         if(Request::isPost()){
@@ -49,19 +50,19 @@ class MvcBuilderController extends Controller{
 
 
     /**
-     *[menu]添加[/menu]
+     *添加
      */
     public function add(){
 
         $tpl_plan = MvcBuilder::getTplPlan('tp51');
 
         $this->assign('tpl_plan' ,$tpl_plan);
-        return $this->fetch(__DIR__ . '/../../../view/add.html');
+        return $this->fetch(__DIR__ . '/../../../View/add.html');
     }
 
 
     /**
-     *[menu]编辑[/menu]
+     *编辑
      */
     public function edit(){
         $id = input('param.id');
@@ -113,13 +114,13 @@ class MvcBuilderController extends Controller{
         $this->assign('models',$models);
         $this->assign('componet' ,$componet);
 
-        return $this->fetch(__DIR__ . '/../../../view/edit.html');
+        return $this->fetch(__DIR__ . '/../../../View/edit.html');
 
     }
 
 
     /**
-     * [menu]编辑组件[/menu]
+     * 编辑组件
      */
     public function get_model_form(){
         $param = input('param.');
@@ -148,12 +149,12 @@ class MvcBuilderController extends Controller{
         //设置的dom
         $this->assign('setting' ,$setting_dom);
 
-        return $this->fetch(__DIR__ . '/../../../view/get_model_form.html');
+        return $this->fetch(__DIR__ . '/../../../View/get_model_form.html');
 
     }
 
     /**
-     * [menu]保存组件编辑[/menu]
+     * 保存组件编辑
      */
     public function edit_model_form(){
         $post = input('post.');
@@ -215,7 +216,7 @@ class MvcBuilderController extends Controller{
 
 
     /**
-     * [menu]保存添加[/menu]
+     * 保存添加
      */
     public function add_action(){
         $post = input('post.');
@@ -234,7 +235,7 @@ class MvcBuilderController extends Controller{
 
     }
     /**
-     *  [menu]保存编辑[/menu]
+     *  保存编辑
      */
     public function edit_action(){
         $post = input('post.');
@@ -251,7 +252,7 @@ class MvcBuilderController extends Controller{
 
     }
     /**
-     *[menu]删除[/menu]
+     *删除
      */
     public function del(){
         $post = input('post.');
@@ -262,7 +263,7 @@ class MvcBuilderController extends Controller{
     }
 
     /**
-     *[menu]批量删除[/menu]
+     *批量删除
      */
     public function pdel(){
         $post = input('post.');
@@ -280,13 +281,13 @@ class MvcBuilderController extends Controller{
     }
 
     /**
-     *[menu]生成模型[/menu]
+     *生成模型
      */
     public function build(){
         $models = self::$models->select()->toArray();
 
         $this->assign('models' ,$models);
-        return $this->fetch(__DIR__ . '/../../../view/build.html');
+        return $this->fetch(__DIR__ . '/../../../View/build.html');
     }
 
     /**
@@ -296,7 +297,7 @@ class MvcBuilderController extends Controller{
         $models = self::$models->select()->toArray();
 
         $this->assign('models' ,$models);
-        return $this->fetch(__DIR__ . '/../../../view/build_menu.html');
+        return $this->fetch(__DIR__ . '/../../../View/build_menu.html');
     }
 
     /**
@@ -396,7 +397,7 @@ class MvcBuilderController extends Controller{
     }
 
     /**
-     *[menu]执行生成模型[/menu]
+     *执行生成模型
      */
     public function build_action(){
         $post = input('post.');
@@ -561,7 +562,7 @@ class MvcBuilderController extends Controller{
 
     /**
      *  逆向生成表单模型 通过数据库
-     *  [menu]逆向模型[/menu]
+     *  逆向模型
      */
     public function reverse(){
         if(Request::instance()->isPost()){
@@ -601,7 +602,7 @@ class MvcBuilderController extends Controller{
 
     }
     /**
-     * [menu]保存逆向添加模型[/menu]
+     * 保存逆向添加模型
      */
     public function reverse_add_action(){
 
@@ -632,9 +633,7 @@ class MvcBuilderController extends Controller{
     protected function get_right_compont(){
 
         $group = FormGroup::get_group();
-
-
-
+        
         $dom = '';
 
         foreach ($group as $k=>$v){

@@ -94,20 +94,19 @@ class Replacer extends CommonReplacer
 
 
         $url = url($module['file_name'].'/'.$models['table_name'].'/index');
-        $editurl = url($module['file_name'].'/'.$models['table_name'].'/edit_action');
+        $editurl = url($module['file_name'].'/'.$models['table_name'].'/table_edit');
 
         $cols = '['."\r\n";
         $cols .=    '[\'type\'=>\'checkbox\'] ,'."\r\n";
 
-        //显示排序 固定的field 值 =》listorder　，
-        $cols .= '[\'field\' => "listorder",\'title\' => \'排序\',\'edit\' => \'text\' ],'."\r\n";
         //显示模型的主键
         $cols .= '[\'field\' => "'.$models['primary_name'].'",\'title\' => \''.$models['primary_name'].'\',\'sort\' => true ],'."\r\n";
+        //显示排序 固定的field 值 =》listorder　，
+        $cols .= '[\'field\' => "listorder",\'title\' => \'排序\',\'edit\' => \'text\' ],'."\r\n";
 
         $param = [];
         foreach($models['component'] as $k => $v){
             $setting = json_decode($v['setting'] ,true);
-            //如果是关联选择 则通过table传递 关系字段
 
             if(isset($setting['intable']) && $setting['intable'] == 'on'){
                 if($v['component_name'] == 'relation' && $setting['base']['showtype'] == 'treeSelect'){
@@ -127,7 +126,7 @@ class Replacer extends CommonReplacer
         $str = '{:CMaker("table")';
         $str .= '->filter("'.$models['table_name'].'")';
         $str .= '->cols('.$cols.')';
-        $str .= '->page(true)';
+        $str .= '->page(false)';
         $str .= '->url(\''.$url.'\')';
         $str .= '->editUrl(\''.$editurl.'\')';
         $param_arr = '';
@@ -317,14 +316,14 @@ EOT;
 
                     break;
                 case 'select':
-                    $option = json_encode(explode('|',$setting['base']['option']));
+                    $option = json_encode(self::splitOptionValue($setting['base']['option']));
 
                     $funcStr .= <<<EOT
     //获取器 值得转化
     public function get{$FieldName}Attr(\$value)
     {
         \$status = json_decode('{$option}',true);
-        return \$status[\$value];
+        return (isset(\$status[\$value]) && \$status[\$value]) ? \$status[\$value] :'';
     }\r\n
 EOT;
                     break;
@@ -386,16 +385,6 @@ EOT;
         if(strlen(\$value)){
             \$attr = explode(',',\$value);
             return join(',',\$attr);
-            
-            
-            //如果有需要 则可以显示成图片
-            //\$str = '';
-            //foreach(\$attr as \$k => \$v){
-            //    \$str .= '<img src="'.\$v.'"\ width="80" height="80">';
-            //}
-            //return \$str;
-            
-            
         }
     }\r\n
 EOT;
@@ -406,49 +395,6 @@ EOT;
         }
         return $funcStr;
     }
-
-    public static function _setPathAttr_($models,$module){
-        $relation_field = '';
-        //获取关系型字段
-        foreach($models['component'] as $k => $v){
-            $setting = json_decode($v['setting'] ,true);
-            if($v['component_name'] == 'relation' && $models['table_name'] == $setting['base']['table']){
-
-
-                $relation_field = $setting['base']['field'];
-            }
-        }
-
-        $field_arr = explode(',',$relation_field);
-        $relation_field = $field_arr[1];
-        $key_field = $field_arr[0];
-        $str =<<<EOT
-public function setPathAttr(\$value,\$data){
-        if(isset(\$data['{$relation_field}']) && strlen(\$data['{$relation_field}'])){
-
-            if(\$data['{$relation_field}'] == 0 || \$data['{$relation_field}'] == null) return 0;
-            \$parent_path = \$this->where('{$key_field}', \$data['{$relation_field}'])->value('path');
-            \$parent_path = trim(\$parent_path ,',');
-            \$parent_path = !strlen(\$parent_path) ? 0 : trim(\$parent_path ,',') ;
-            return \$parent_path.','.\$data['{$relation_field}'] ;
-
-        }else{//排序的时候是没有赋值 parentid
-
-            if(isset(\$data['{$key_field}']) && \$data['{$key_field}'] > 0){
-                \$parent_path = \$this->where('{$key_field}' , \$data['{$key_field}'])->value('path');
-                \$parent_path = !strlen(\$parent_path) ? 0 :\$parent_path ;
-                return ','.\$parent_path;
-            }else{
-                return 0;
-            }
-
-        }
-    }
-EOT;
-            return $str;
-
-    }
-
 
     public static function _validata_rule_(){
         return '\'\'';
@@ -463,18 +409,14 @@ EOT;
     public static function _relation_field_all_($models,$module){
 
         foreach($models['component'] as $k => $v){
-
             $setting = json_decode($v['setting'] ,true);
-            if($models['table_name'] == $setting['base']['table'] ){
 
+            if($v['component_name'] == 'relation'){
                 return $setting['base']['field'];
             }
-
-//            if($v['component_name'] == 'relation'){
-//                $setting = json_decode($v['setting'] ,true);
-//                return $setting['field']['name'];
-//            }
         }
+
+
 
     }
 
@@ -484,7 +426,7 @@ EOT;
         foreach($models['component'] as $k => $v){
 
             $setting = json_decode($v['setting'] ,true);
-            if($models['table_name'] == $setting['base']['table'] ){
+            if($v['component_name'] == 'relation'){
 
                  return $setting['field']['name'];;
             }

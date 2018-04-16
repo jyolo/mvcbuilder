@@ -45,9 +45,11 @@ class MenuBuilder extends MvcBuilder
                 break;
         }
 
-
+        p($models);
+        die();
         foreach ($models as $k => $v){
             $file_name = $this->tablename_to_filename($v['controller']);
+
             $class = $v['app_namespace'].'\\'.$file_name;
             if(!class_exists($class)) throw new Exception($class.' 不存在请先生成文件');
 

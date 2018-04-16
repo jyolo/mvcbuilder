@@ -15,7 +15,7 @@ use think\facade\Request;
 
 
 /**
- * 角色管理
+ * _models_zh_name_
  */
 class _models_en_name_ extends Common
 {
@@ -110,10 +110,21 @@ _notSetValueComponent_
 
         if(isset($post['_relation_field_']) && $post['_primary_name_'] == $post['_relation_field_']) $this->error('上级不可以是自己');
 
-
-        $flag = $model->isUpdate(true)->save($post);
+        $flag = $model->_save($post);
         $new_data = $model->find($post['_primary_name_'])->toArray();
         $flag ? $this->success('操作成功','',$new_data):$this->error('操作失败');
+    }
+    /**
+     * 表格编辑
+     */
+    public function table_edit(){
+        $post = input('post.');
+        if(!isset($post['_primary_name_']) || !$post['_primary_name_'])$this->error('缺少 _primary_name_');
+
+        $model = new model\_models_en_name_();
+        $flag = $model->isUpdate(true)->save($post);
+        $flag ? $this->success('操作成功'):$this->error('操作失败');
+
     }
     /**
      * 删除
@@ -146,6 +157,7 @@ _notSetValueComponent_
         $flag = $model->where('_primary_name_','in',$post['ids'])->delete();
         $flag ? $this->success('操作成功'):$this->error('操作失败');
     }
+
 
 
 }

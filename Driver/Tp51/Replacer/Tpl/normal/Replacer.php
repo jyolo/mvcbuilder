@@ -350,7 +350,6 @@ EOT;
 
 
                     break;
-
                 case 'select':
                     $option = json_encode(self::splitOptionValue($setting['base']['option']));
 
