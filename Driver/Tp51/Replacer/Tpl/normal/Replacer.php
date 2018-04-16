@@ -92,7 +92,7 @@ class Replacer extends CommonReplacer
     public static function _table_($models,$module){
 
         $url = url($module['file_name'].'/'.$models['table_name'].'/index');
-        $editurl = url($module['file_name'].'/'.$models['table_name'].'/edit_action');
+        $editurl = url($module['file_name'].'/'.$models['table_name'].'/table_edit');
 
         $cols = '['."\r\n";
         $cols .=    '[\'type\'=>\'checkbox\'] ,'."\r\n";

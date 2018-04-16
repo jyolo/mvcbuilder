@@ -41,7 +41,7 @@ class _models_en_name_ extends Common
 
             $model = new model\_models_en_name_();
 
-            $res = $model->where($where)->page($post['page'] ,$post['limit'])->order('add_time desc')->select()->toArray();
+            $res = $model->where($where)->page($post['page'] ,$post['limit'])->order('listorder desc')->select()->toArray();
             //当前分页没有数据，但总数还是有的
             //fixed 第二页数据删除完了之后 layuitable reload 不会自动跳转到 第一页
             if(!count($res) && $model->count($model->getPk()) > 0){
@@ -103,6 +103,18 @@ _notSelectTopCat_
         $flag = $model->isUpdate(true)->save($post);
         $new_data = $model->find($post['_primary_name_'])->toArray();
         $flag ? $this->success('操作成功','',$new_data):$this->error('操作失败');
+    }
+    /**
+     * 表格编辑
+     */
+    public function table_edit(){
+        $post = input('post.');
+        if(!isset($post['_primary_name_']) || !$post['_primary_name_'])$this->error('缺少 _primary_name_');
+
+        $model = new model\_models_en_name_();
+        $flag = $model->isUpdate(true)->save($post);
+        $flag ? $this->success('操作成功'):$this->error('操作失败');
+
     }
     /**
      * 删除

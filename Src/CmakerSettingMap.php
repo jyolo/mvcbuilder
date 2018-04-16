@@ -120,13 +120,27 @@ class CmakerSettingMap
                 'component' => 'text',
                 'label' => '选项字符',
                 'placeholder' => '比如：是|否',
-                'helpinfo' => '最多两个值，用 | 先分割',
+                'helpinfo' => '',
+            ],
+            'onvalue' =>[
+                'component' => 'text',
+                'label' => '开启的值',
+                'helpinfo' => '开关开启之后传递的值',
+                'layVerify' => 'required',
+            ],
+            'offvalue' => [
+                'component' => 'text',
+                'label' => '关闭的值',
+                'helpinfo' => '开关关闭之后传递的值',
+                'layVerify' => 'required',
             ],
             'open' => [
                 'component' => 'switchs',
                 'label' => '默认开启',
                 'text' => '是|否',
             ],
+
+
         ],
         'ueditor' => [
             'show' => [
