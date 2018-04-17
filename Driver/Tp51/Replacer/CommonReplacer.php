@@ -13,17 +13,17 @@ class CommonReplacer extends CmakerSettingMap
 {
 
     public static function _module_name_($models,$module){
-
-        if(strpos($module['file_name'],'_')){
-            $arr = explode('_',$module['file_name']);
-            $str = '';
-            foreach($arr as $k => $v){
-                $str .= ucfirst($v);
-            }
-            return $str;
-        }else{
-            return ucfirst($module['file_name']);
-        }
+        return $module['file_name'];
+//        if(strpos($module['file_name'],'_')){
+//            $arr = explode('_',$module['file_name']);
+//            $str = '';
+//            foreach($arr as $k => $v){
+//                $str .= ucfirst($v);
+//            }
+//            return $str;
+//        }else{
+//            return ucfirst($module['file_name']);
+//        }
 
     }
 

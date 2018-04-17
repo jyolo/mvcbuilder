@@ -41,6 +41,7 @@ class SqlBuilder extends MvcBuilder
         ],
     ];
 
+
     /**
      * 设置自动写入的字段
      */
@@ -65,7 +66,6 @@ class SqlBuilder extends MvcBuilder
         }
 
         $data['tpl_plan'] = $post['tpl_plan'];
-
         $data['primary']['name'] = $post['primary']['name'] ? $post['primary']['name'] : null;
         $data['primary']['type'] = $post['primary']['type'] ? $post['primary']['type'] : null;
         $data['primary']['length'] = $post['primary']['length'] ? $post['primary']['length'] : null;
@@ -85,6 +85,7 @@ class SqlBuilder extends MvcBuilder
 
 
             $arg['component_name'] = $post['component_name'][$k];
+            $arg['field']['comment'] = $arg['field']['comment'] ? $arg['field']['comment'] : $arg['base']['label'];
 
             $new_post[$k] = $arg;
 
@@ -111,7 +112,7 @@ class SqlBuilder extends MvcBuilder
     public function create(){
         if(self::$error != false) return self::$_instance;
 
-        //创建表
+        //创建表 执行ddl 语句
         $flag = $this->makeTable();
         if($flag){
             $flag = $this->insertModels();
@@ -179,7 +180,6 @@ class SqlBuilder extends MvcBuilder
                 $up['del'][$dk] = $old_cid['info'][$dv];
             }
         }
-
 
 
 
@@ -353,7 +353,7 @@ class SqlBuilder extends MvcBuilder
      * 更新models
      */
     private function updateModels(){
-        $info = Db::table('jy_models')->field('table_name,primary_name,primary_type,primary_length')->find(self::$data['models_id']);
+        $info = Db::table('jy_models')->field('table_name,tpl_plan,primary_name,primary_type,primary_length')->find(self::$data['models_id']);
 
 
         //检查表的名称是否变更
@@ -377,7 +377,6 @@ class SqlBuilder extends MvcBuilder
           WHERE table_name=\''.config('database.prefix').self::$data['table_name'].'\' AND column_name = \''.$info['primary_name'].'\' ';
 
         $res = Db::query($sql);
-
 
         //检查是否更新主键字段信息
         $update_primary_filed = false;
@@ -404,6 +403,39 @@ class SqlBuilder extends MvcBuilder
             }
         }
 
+        //nomal 变成 category
+        if(self::$data['tpl_plan'] != $info['tpl_plan'] && self::$data['tpl_plan'] == 'category')
+        {
+            foreach(self::$data['component'] as $k => $v){
+                //如果有 relation组件 并且 显示方式 是 treeSelect  则自动添加path 字段
+                if($v['component_name'] == 'relation' && $v['base']['showtype'] == 'treeSelect'){
+                     $path_field[0] = [
+                         'field' => [
+                             'name' => 'path',
+                             'length' => '255',
+                             'type' => 'varchar',
+                             'comment' => '层级关系',
+                             'defualt_value' => '0',
+                         ]
+                     ];
+
+                     $isexits = $this->check_field_exits(config('database.prefix').self::$data['table_name'] ,$path_field);
+                     //创建
+                     if($isexits != false){
+                         $flag = $this->add_field(config('database.prefix').self::$data['table_name'] ,$path_field);
+                         if(!$flag) return false;
+                     }
+
+                }
+            }
+        }
+        //category  变成  nomal
+//        if(self::$data['tpl_plan'] != $info['tpl_plan'] && self::$data['tpl_plan'] == 'category')
+//        {
+////            foreach(self::$data['component'] as $k => $v){
+////
+////            }
+//        }
 
 
         //更新数据库
@@ -511,9 +543,7 @@ class SqlBuilder extends MvcBuilder
             self::$error = config('database.prefix').self::$data['table_name'].' 表已经存在';
             return false;
         }
-
         $sql = $this->build_make_table_sql();
-
 
         try{
             Db::execute($sql);
@@ -591,10 +621,8 @@ class SqlBuilder extends MvcBuilder
             $field_info = array_merge($field_info ,$this->autoInsertField);
         }
 
-
         //组装自定义字段 放中间
         foreach($field_info as $k => $v){
-
             $type =  strtoupper($v['type']);
             $len =  $v['length'];
 
@@ -617,7 +645,7 @@ class SqlBuilder extends MvcBuilder
                 }
                 //如果有设置注释
                 if(isset($comment[$sk]) && strlen($comment[$sk])){
-                    $sql .= ' COMMENT "'.strval(trim(isset($comment[$sk]) ?$comment[$sk] : '')).'" ';
+                    $sql .= ' COMMENT "'.strval(trim(isset($comment[$sk]) ? $comment[$sk] : '')).'" ';
                 }
 
                 //数组长度大于1的时候 后面加上逗号
@@ -691,7 +719,7 @@ class SqlBuilder extends MvcBuilder
             Db::execute($sql);
             return true;
         }catch (Exception $e ){
-            self::$error = '新增字段失败';
+            self::$error = '新增字段失败 :'.$e->getMessage();
             return false;
         }
     }
