@@ -79,17 +79,18 @@ layui.use(['layer', 'element', 'util'], function () {
         // 大于0就是有该选项卡了
         if (flag > 0) {
             id = flag;
-            element.tabDelete(card, id ); //删除选该项卡重新加载
-            if (src) {
-                //新增
-                element.tabAdd(card, {
-                    title: '<span>' + title + '</span>'
-                    , content: '<iframe src="' + src + '" frameborder="0"></iframe>'
-                    , id: id
-                });
-                // 关闭弹窗
-                layer.closeAll();
-            }
+
+            $('.layui-tab').find('li').each(function(i,n){
+                if($(n).attr('lay-id') == id){
+                    var loader = layer.load(3 );
+                    $('iframe').eq($(n).index()).attr('src',src);
+                    $('iframe').eq($(n).index()).on('load',function(){
+                        layer.close(loader);
+                    });
+                }
+            });
+            // // 刷新当前页
+
         } else {
             if (src) {
                 //新增
@@ -98,8 +99,18 @@ layui.use(['layer', 'element', 'util'], function () {
                     , content: '<iframe src="' + src + '" frameborder="0"></iframe>'
                     , id: id
                 });
-                // 关闭弹窗
-                layer.closeAll();
+                //加载的时候显示loading  
+                $('.layui-tab').find('li').each(function(i,n){
+                    if($(n).attr('lay-id') == id){
+                        layer.load(3 );
+                        $('iframe').eq($(n).index()).on('load',function(){
+                            // 关闭弹窗
+                            layer.closeAll();
+                        });
+                    }
+                });
+
+
             }
         }
         // 切换相应的ID tab
