@@ -99,7 +99,7 @@ layui.use(['layer', 'element', 'util'], function () {
                     , content: '<iframe src="' + src + '" frameborder="0"></iframe>'
                     , id: id
                 });
-                //加载的时候显示loading  
+                //加载的时候显示loading
                 $('.layui-tab').find('li').each(function(i,n){
                     if($(n).attr('lay-id') == id){
                         layer.load(3 );
