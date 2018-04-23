@@ -30,7 +30,7 @@ class MvcBuilder
         if(class_exists($exntend_Handler)){
             $driver_called = $exntend_Handler;
         }else{
-            $driver_called = explode('\\',$self)[0].'\Driver\\'.$driver_name.'\Replacer\Handler';
+            $driver_called = explode('\\',$self)[0].'\Driver\\'.$driver_name.'\Handler';
         }
 
         //检查驱动是否继承了core 里面的driver
@@ -86,8 +86,8 @@ class MvcBuilder
         else
         {
             $self = get_class();
-            $driver_called = explode('\\',$self)[0].'\Driver\\'.$driver_name.'\Replacer\Handler';
-            $tpl_path = str_replace('\Src','',__DIR__) .'\Driver\\'.$driver_name.'\Replacer\Tpl';
+            $driver_called = explode('\\',$self)[0].'\Driver\\'.$driver_name.'\Handler';
+            $tpl_path = str_replace('\Src','',__DIR__) .'\Driver\\'.$driver_name.'\Tpl';
             $handler = new $driver_called;
 
             if(!file_exists($tpl_path))throw new \Exception($tpl_path .'不存在');
@@ -97,7 +97,8 @@ class MvcBuilder
 
         $arr = array_slice(scandir($tpl_path) ,2);
 
-        $handler_tpl_map = $handler->tpl;
+        $handler_tpl_map = property_exists($handler ,'tpl') ? $handler->tpl : false;
+
         $arg = [];
         foreach($arr as $k=>$v){
             //有定义 文件夹的名称 则使用名称，没定义则使用文件名字

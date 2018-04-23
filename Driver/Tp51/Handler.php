@@ -6,7 +6,7 @@
  * Time: 13:57
  */
 
-namespace MvcBuilder\Driver\Tp51\Replacer;
+namespace MvcBuilder\Driver\Tp51;
 
 
 use MvcBuilder\Core\ContentBuilder;

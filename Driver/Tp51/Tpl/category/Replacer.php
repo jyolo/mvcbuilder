@@ -6,11 +6,11 @@
  * Time: 10:55
  */
 
-namespace MvcBuilder\Driver\tp51\Replacer\Tpl\category;
+namespace MvcBuilder\Driver\tp51\Tpl\category;
 use CMaker\components\checkbox;
 use CMaker\Maker;
 use MvcBuilder\ComponentSettingMap;
-use MvcBuilder\Driver\tp51\Replacer\CommonReplacer;
+use MvcBuilder\Driver\tp51\CommonReplacer;
 use think\Exception;
 
 class Replacer extends CommonReplacer

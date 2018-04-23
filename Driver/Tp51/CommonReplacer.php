@@ -4,7 +4,7 @@
  * Time: 13:58
  */
 
-namespace MvcBuilder\Driver\Tp51\Replacer;
+namespace MvcBuilder\Driver\Tp51;
 
 
 use MvcBuilder\CmakerSettingMap;
