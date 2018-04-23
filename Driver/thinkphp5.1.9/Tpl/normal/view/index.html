@@ -1,0 +1,73 @@
+{extend name='../base/index/main'}
+
+{block name='main'}
+<style>
+    .search-quote{float:left;width: 100%;}
+    .layui-form-item{width:33.33%;float:left;clear: none;}
+    .layui-boxs{padding:15px;}
+    .layui-elem-quote{padding:10px 0;}
+</style>
+<div class="layui-layout">
+    <fieldset class="layui-elem-field layui-field-title" >
+        <legend>搜索</legend>
+        <blockquote class="layui-elem-quote search-quote">
+            <div class="layui-boxs">
+                <form class="layui-form layui-form-pane" action="{:url('_models_en_name_/index')}" method="post" lay-filter="search">
+        _search_component_
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <button class="layui-btn lay-submit" lay-submit data-type="search_reload_table" table-index="0">
+                            <i class="layui-icon">&#xe615;</i> 搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+            </form>
+            </div>
+        </blockquote>
+    </fieldset>
+
+    <form class="layui-form layui-form-pane" action="{:url('_models_en_name_/index')}" method="post" lay-filter="list-table">
+        <blockquote class="layui-elem-quote layui-quote-nm">
+            <div class="layui-boxs">
+                <button class="layui-btn" lay-submit data-url="{:url('_models_en_name_/pdel')}" data-call-back="reload_table" table_index="0">
+                    批量删除
+                </button>
+
+                <button class="layui-btn link" data-type="page" data-url="{:url('_models_en_name_/add')}" style="float: right">
+                    添加
+                </button>
+            </div>
+        </blockquote>
+
+       _table_
+
+        <script type="text/html" id="actionTpl" lay-filter="defualt">
+            <div class="layui-btn-group">
+                <span data-url="{:url('_models_en_name_/edit')}" data-field="id" class="layui-btn layui-btn-sm" lay-event="edit">编辑</span>
+                <span data-url="{:url('_models_en_name_/del')}" data-field="id" class="layui-btn layui-btn-sm layui-btn-danger" lay-event="action" confirm-msg="确定删除？" confirm-type="del">删除</span>
+            </div>
+        </script>
+
+
+
+        <blockquote class="layui-elem-quote layui-quote-nm">
+            <div class="layui-boxs">
+                <button class="layui-btn" lay-submit data-url="{:url('_models_en_name_/pdel')}" data-call-back="reload_table" table_index="0">
+                    批量删除
+                </button>
+                <button class="layui-btn link" data-type="page" data-url="{:url('_models_en_name_/add')}" style="float: right">
+                    添加
+                </button>
+            </div>
+        </blockquote>
+    </form>
+</div>
+
+<script type="text/javascript" src="__PLUGIN_PATH__/layui/layui.js"></script>
+<script type="text/javascript" src="__PLUGIN_PATH__/lay-extend-module/config.js"></script>
+
+_CMakerJs_
+
+{/block}
