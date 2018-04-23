@@ -19,17 +19,19 @@ class ContentBuilder extends MvcBuilder
     private static $notReplaceMethod = ['tosplitKeyToValue','splitOptionValue']; // 定义不被替换的方法
 
     public static function create($info){
+
         if(self::$tplPath == null)self::$tplPath = self::getTplPath();
 
         self::$info = $info;
 
         $content = self::getContent();
 
+
         file_put_contents($info['file'],$content);
     }
 
     public static function getContent(){
-
+        //模板文件
         $tplFile = self::getTplPlanFile();
 
         //替换者
@@ -76,7 +78,6 @@ class ContentBuilder extends MvcBuilder
         $handlerRootNameSpace = join('\\',$arr);
 
         $Replacer = $handlerRootNameSpace.DIRECTORY_SEPARATOR.'Tpl'.DIRECTORY_SEPARATOR.self::$info['tpl_plan'].DIRECTORY_SEPARATOR.'Replacer';
-
 
         if(!class_exists($Replacer))throw new \Exception($Replacer.' ,replacer不存在');
 

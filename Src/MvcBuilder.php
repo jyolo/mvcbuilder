@@ -23,9 +23,15 @@ class MvcBuilder
      * @throws \ErrorException
      */
     public static function init($driver_name,$post = []){
-
         $self = get_class();
-        $driver_called = explode('\\',$self)[0].'\Driver\\'.$driver_name.'\Replacer\Handler';
+        //拓展的生成方案
+        $exntend_Handler = '\MvcbuilderDriver\\'.$driver_name.'\Handler';
+        //优先使用拓展的生成方案
+        if(class_exists($exntend_Handler)){
+            $driver_called = $exntend_Handler;
+        }else{
+            $driver_called = explode('\\',$self)[0].'\Driver\\'.$driver_name.'\Replacer\Handler';
+        }
 
         //检查驱动是否继承了core 里面的driver
         if(get_parent_class($driver_called) != explode('\\',$self)[0].'\Core\Driver') throw new \ErrorException($driver_called .'驱动未定义');
@@ -66,16 +72,42 @@ class MvcBuilder
     public static function getTplPlan($driver_name){
         $self = get_class();
 
+        $extend_handler = '\MvcbuilderDriver\\'.$driver_name.'\Handler';
+        if(class_exists($extend_handler))
+        {
+            $ref = new \ReflectionClass($extend_handler);
+            $handler_path = $ref->getFileName();
+            $arr = explode('\\',$handler_path);
+            array_pop($arr);
+            $tpl_path = join('\\',$arr).'\\tpl';
+            $handler = new $extend_handler;
+            if(!file_exists($tpl_path))throw new \Exception($driver_name.'拓展的Replacer 的 Tpl 不存在');
+        }
+        else
+        {
+            $self = get_class();
+            $driver_called = explode('\\',$self)[0].'\Driver\\'.$driver_name.'\Replacer\Handler';
+            $tpl_path = str_replace('\Src','',__DIR__) .'\Driver\\'.$driver_name.'\Replacer\Tpl';
+            $handler = new $driver_called;
 
-        $tpl_path = str_replace('\Src','',__DIR__) .'\Driver\\'.$driver_name.'\Replacer\Tpl';
+            if(!file_exists($tpl_path))throw new \Exception($tpl_path .'不存在');
+        }
 
-        //检查驱动是否继承了core 里面的driver
-        if(!file_exists($tpl_path))throw new \ErrorException($tpl_path .'不存在');
+
+
         $arr = array_slice(scandir($tpl_path) ,2);
+
+        $handler_tpl_map = $handler->tpl;
         $arg = [];
         foreach($arr as $k=>$v){
-            $arg[$v] = $v;
+            //有定义 文件夹的名称 则使用名称，没定义则使用文件名字
+            if(isset($handler_tpl_map[$v]) && $handler_tpl_map[$v]){
+                $arg[$v] = $handler_tpl_map[$v];
+            }else{
+                $arg[$v] = $v;
+            }
         }
+
         return $arg;
     }
 

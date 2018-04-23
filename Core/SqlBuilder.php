@@ -97,7 +97,6 @@ class SqlBuilder extends MvcBuilder
         }
 
 
-
         $data['component'] = $new_post;
 
         self::$data = $data;
@@ -156,6 +155,7 @@ class SqlBuilder extends MvcBuilder
 
                 $oldfield = json_decode($iv['setting'] ,true);
                 if(isset($v['component_id']) && $v['component_id'] == $iv['id']){
+
                     //设置字段更新标志
                     if(count(array_diff_assoc($v['field'] ,$oldfield['field']))) $v['up_field'] = true;
                 }
@@ -737,23 +737,20 @@ class SqlBuilder extends MvcBuilder
                 $sql .= strtoupper($v['type']).'('.$v['length'].')';
             }
 
-            if(isset($v['label_name']) && strlen($v['label_name'])){
-                $sql .= ' COMMENT "'.$v['label_name'].'" ';
-            }
+//            if(isset($v['label_name']) && strlen($v['label_name'])){
+//                $sql .= ' COMMENT "'.$v['label_name'].'" ';
+//            }
 
             //如果有设置 defualt
             if(isset($v['defualt_value']) && strlen($v['defualt_value']) > 0){
                 $sql .= ' DEFAULT '.$v['defualt_value'].',';
-            }
-
-            if($isprimarykey == true){
+            }elseif($isprimarykey == true){
                 $sql .= ' NOT NULL AUTO_INCREMENT ,';
+            }else{
+                $sql .= ',';
             }
-
 
         }
-
-
 
         $sql = trim($sql,',');
 
