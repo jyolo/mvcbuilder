@@ -265,13 +265,13 @@ EOT;
         $funcStr = '';
         foreach($models['component'] as $k => $v){
             $setting = json_decode($v['setting'] ,true);
-            if(strpos($setting['field']['name'] ,'_')){
-                $arr = explode('_',$setting['field']['name']);
-                $temp_str = '';
-                foreach($arr as $sk => $sv){
-                    $temp_str .= ucfirst($sv);
+            if(strpos($setting['field']['name'],'_')){ //带有下划线的转化成驼峰形式
+                $temp = explode('_',$setting['field']['name']);
+                $tempFieldName = '';
+                foreach ($temp as $sk => $sv){
+                    $tempFieldName .= ucfirst($sv);
                 }
-                $FieldName = $temp_str;
+                $FieldName = $tempFieldName;
             }else{
                 $FieldName = ucfirst($setting['field']['name']);
             }
@@ -340,6 +340,7 @@ EOT;
 EOT;
                     break;
                 case 'relation':
+
                     //自己模型 不转化 自己的pid
                     if($models['table_name'] == $setting['base']['table'] ){
 
@@ -352,17 +353,33 @@ EOT;
     }\r\n
 EOT;
                     }else{
-                        $relation_field = explode(',',$setting['base']['field']);
-                        $pk = $relation_field[0];
-                        $value = array_pop($relation_field);
+                        $field = explode(',',$setting['base']['field']);
+
+                        $showfield = (isset($field[2]) && strlen($field[2])) ? $field[2] : $field[1];
 
                         $funcStr .= <<<EOT
     //获取器 值得转化
     public function get{$FieldName}Attr(\$value)
     {
-        if(!strlen(\$value)) return 0;
-        \$res = Db::name('{$setting['base']['table']}')->where('{$relation_field[0]}' ,'=',\$value)->value('{$value}');
-        return \$res;
+        if(!\$value) return '暂无';
+        if(strpos(\$value,',')){
+            \$arr = explode(',' ,\$value);
+            \$res = \$this->name('role')->where('id','in',\$arr)->select();
+            \$return  = '';
+            foreach(\$res as \$k => \$v){
+               \$return .= \$v['{$showfield}'].',';
+            }
+            return trim(\$return ,',');
+        }else{
+            return \$this->name('{$setting['base']['table']}')->where('{$field[0]}',\$value)->value('{$showfield}');
+        }
+        
+    }\r\n
+    //获取器 值得转化
+    public function set{$FieldName}Attr(\$value)
+    {
+        \$value = is_array(\$value) ? join(',',\$value) : \$value;
+        return \$value;
     }\r\n
 EOT;
 

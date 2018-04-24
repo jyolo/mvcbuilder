@@ -40,10 +40,12 @@ function _parseWhere($postWhere){
         }else{ //非数组的形式 where[admin_name]
             if(strlen($v)){
                 //如果是自动生成的path 字段则左右两侧加上逗号
-               // $where[] = ['' ,'exp' ,'instr('.$k.',\''.$v.'\')'];
                 //tp5.1.7 表达式修改过，上面方法失效
+                //$where[] = ['' ,'EXP' ,'instr('.$k.',\''.$v.'\')'];
 
-                $where[] = [''.$k.'' ,'like' ,'%'.$v.'%'];
+                $where[] = ['' ,'EXP' ,\think\Db::raw('instr('.$k.',\''.$v.'\')')];
+
+                //$where[] = [''.$k.'' ,'like' ,'%'.$v.'%'];
             }
         }
 

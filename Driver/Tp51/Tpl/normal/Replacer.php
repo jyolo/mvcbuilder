@@ -225,8 +225,8 @@ EOT;
 
                 $str = <<<EOT
         if(isset(\$post['{$self_field}']) && intval(\$post['{$self_field}']) > 0){
-            \$cat = model\\{$ModelName}::where('{$field[0]}',\$post['{$self_field}'])->value('{$field[1]}');
-            if(\$cat == 0)\$this->error('不能选择顶级分类');
+            \$hasson = model\\{$ModelName}::where('{$field[1]}',\$post['{$self_field}'])->value('{$field[0]}');
+            if(\$hasson)\$this->error('不能选择顶级分类');
         }
 EOT;
                 return $str;
@@ -310,7 +310,17 @@ EOT;
         $funcStr = '';
         foreach($models['component'] as $k => $v){
             $setting = json_decode($v['setting'] ,true);
-            $FieldName = ucfirst($setting['field']['name']);
+            if(strpos($setting['field']['name'],'_')){ //带有下划线的转化成驼峰形式
+                $temp = explode('_',$setting['field']['name']);
+                $tempFieldName = '';
+                foreach ($temp as $sk => $sv){
+                    $tempFieldName .= ucfirst($sv);
+                }
+                $FieldName = $tempFieldName;
+            }else{
+                $FieldName = ucfirst($setting['field']['name']);
+            }
+
 
             switch($v['component_name']){
                 case 'checkbox':
@@ -385,7 +395,24 @@ EOT;
     public function get{$FieldName}Attr(\$value)
     {
         if(!\$value) return '暂无';
-        return \$this->name('{$setting['base']['table']}')->where('{$field[0]}',\$value)->value('{$showfield}');
+        if(strpos(\$value,',')){
+            \$arr = explode(',' ,\$value);
+            \$res = \$this->name('role')->where('id','in',\$arr)->select();
+            \$return  = '';
+            foreach(\$res as \$k => \$v){
+               \$return .= \$v['{$showfield}'].',';
+            }
+            return trim(\$return ,',');
+        }else{
+            return \$this->name('{$setting['base']['table']}')->where('{$field[0]}',\$value)->value('{$showfield}');
+        }
+        
+    }\r\n
+    //获取器 值得转化
+    public function set{$FieldName}Attr(\$value)
+    {
+        \$value = is_array(\$value) ? join(',',\$value) : \$value;
+        return \$value;
     }\r\n
 EOT;
                     break;
