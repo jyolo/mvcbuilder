@@ -3,7 +3,7 @@ namespace app\_module_name_\model;
 use think\Model;
 
 /**
- * 自动化模型的model模板文件
+ * _models_zh_name_ Model
  */
 class _models_en_name_ extends Model
 {

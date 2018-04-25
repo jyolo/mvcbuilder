@@ -2,7 +2,7 @@
 namespace app\_module_name_\validate;
 use think\Validate;
 /**
- * 自动化模型的validate模板文件
+ * _models_zh_name_ Model
  */
 class _models_en_name_ extends Validate
 {

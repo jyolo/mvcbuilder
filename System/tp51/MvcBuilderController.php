@@ -172,26 +172,17 @@ class MvcBuilderController extends Controller{
         }else{
             $setting_key = md5( uniqid('',true).uniqid('',true) );
         }
-
-
         //缓存设置的信息 86400秒 / 24个小时
         cache($setting_key ,json_encode($post) ,86400);
-
-
         //组件的设置json格式
         $data['html'] = Maker::build('hidden')->classname('__setting')->name('setting['.$el_index.']')->value($setting_key)->render();
 
-
         $value = isset($post['value']) ? explode('|',$post['value']): '';
-
-
         //获取组件
         $component = Maker::getClass($get['form_type']);
 
-
         //获取组件属性
         $component_attr = $component::attr();
-
 
         try{
 
