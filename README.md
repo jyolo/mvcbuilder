@@ -1,6 +1,6 @@
-# mvcbuilder
 
-#快速开始 
+# 快速开始 
+
 1: composer require jyolo/mvcbuilder 
 
 2: 导入mvcbuilder.sql
