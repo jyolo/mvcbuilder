@@ -12,6 +12,7 @@ use app\base\controller\Common;
 use app\_module_name_\model;
 use CMaker\Component;
 use think\facade\Request;
+use think\Db;
 
 
 /**
@@ -157,7 +158,20 @@ _notSetValueComponent_
         $flag = $model->where('_primary_name_','in',$post['ids'])->delete();
         $flag ? $this->success('操作成功'):$this->error('操作失败');
     }
+    /**
+     * 批量操作
+     */
+    public function batch(){
+        $type = input('param.type');
+        $value = input('param.value');
+        $post = input('post.');
+        if(!isset($post['ids']))$this->error('请选选择');
 
+        $model = new model\_models_en_name_();
+        $update = [$type => $value];
+        $flag = Db::table($model->getTable())->where('_primary_name_','in',$post['ids'])->update($update);
+        $flag ? $this->success('操作成功'):$this->error('操作失败');
+    }
 
 
 }

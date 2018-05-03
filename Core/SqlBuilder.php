@@ -41,6 +41,7 @@ class SqlBuilder extends MvcBuilder
         ],
     ];
 
+    private static $old_field = [];
 
     /**
      * 设置自动写入的字段
@@ -100,6 +101,13 @@ class SqlBuilder extends MvcBuilder
         $data['component'] = $new_post;
 
         self::$data = $data;
+        //获取当前数据表的所有字段
+        $sql = 'SELECT column_name as `name`,COLUMN_TYPE as type FROM information_schema.columns 
+          WHERE table_name=\''.config('database.prefix').self::$data['table_name'].'\'  ';
+
+        $res = Db::query($sql);
+
+        self::$old_field = $res;
 
         return self::$_instance;
     }
@@ -129,11 +137,10 @@ class SqlBuilder extends MvcBuilder
      */
     public function update(){
         if(self::$error != false) return false;
-
+        //数据库字段信息
+        if(!$this->updateComponent())return false;
         //更新models信息以及表,主键的信息
-        if(!$this->updateModels())return false;
-
-        return $this->updateComponent();
+        return $this->updateModels();
 
     }
 
@@ -147,7 +154,6 @@ class SqlBuilder extends MvcBuilder
         $up['new'] = $up['update'] = $up['del'] = [];
         //组装 新增，更新 ，删除的组件数据
         foreach(self::$data['component'] as $k => $v){
-
 
             foreach($info as $ik => $iv){
                 $old_cid['ids'][$ik] = $iv['id'];
@@ -186,11 +192,12 @@ class SqlBuilder extends MvcBuilder
         if(count($up['new'])){
             //返回新增的组件的id
             $cids = $this->add_component($up['new']);
+
             if($cids == false) return false;
         }
         if(count($up['update'])){
             $flag = $this->update_component($up['update']);
-            //p($flag);
+
         }
         if(count($up['del'])){
             $flag = $this->del_component($up['del']);
@@ -263,7 +270,6 @@ class SqlBuilder extends MvcBuilder
         $up_data = [];
         $now = date('Y-m-d H:i:s' ,time());
 
-
         try{
 
             foreach($component as $k => $v){
@@ -319,7 +325,7 @@ class SqlBuilder extends MvcBuilder
 
         }catch (Exception $e){
             Db::rollback();
-            self::$error = $e->getMessage();
+            self::$error = 'update_component error_msg:' .$e->getMessage();
             return false;
         }
 
@@ -341,7 +347,6 @@ class SqlBuilder extends MvcBuilder
         foreach($component as $k => $v){
             $ids[] = intval($v['id']);
         }
-
 
         $flag = Db::table('jy_models_component')->delete($ids);
         $flag = $flag ? true : false;
@@ -728,18 +733,35 @@ class SqlBuilder extends MvcBuilder
      */
     private function update_field($change ,$isprimarykey = false){
 
+
         $sql = 'ALTER TABLE '.config('database.prefix').self::$data['table_name'].' ';
 
+        $old_field_type = [];
+        foreach(self::$old_field as $k => $v){
+            array_push($old_field_type ,$v['name'].'-'.$v['type']);
+        }
+
+
         foreach($change as $k =>$v){
+            if(intval($v['length']) > 0){
+                $new = $v['new_field_name'] .'-'.strtolower($v['type']) .'('.$v['length'] .')';
+            }else{
+                $new = $v['new_field_name'] .'-'.strtolower($v['type']);
+            }
+
+            //如果一致的 则直接跳过
+            if(in_array($new ,$old_field_type)) continue;
 
             $sql .= 'CHANGE `'.$v['old_field_name'].'` `'.$v['new_field_name'].'` ';
             if(intval($v['length']) > 0){
                 $sql .= strtoupper($v['type']).'('.$v['length'].')';
+            }else{
+                $sql .= strtoupper($v['type']);
             }
 
-//            if(isset($v['label_name']) && strlen($v['label_name'])){
-//                $sql .= ' COMMENT "'.$v['label_name'].'" ';
-//            }
+            if(isset($v['label_name']) && strlen($v['label_name'])){
+                $sql .= ' COMMENT "'.$v['label_name'].'" ';
+            }
 
             //如果有设置 defualt
             if(isset($v['defualt_value']) && strlen($v['defualt_value']) > 0){
@@ -754,11 +776,12 @@ class SqlBuilder extends MvcBuilder
 
         $sql = trim($sql,',');
 
+
         try{
             Db::execute($sql);
             return true;
         }catch (Exception $e ){
-            self::$error = $e->getMessage();
+            self::$error = 'update_field error_msg:'.$e->getMessage();
             return false;
         }
 
@@ -768,12 +791,24 @@ class SqlBuilder extends MvcBuilder
      */
     private function del_field($table ,$info){
 
+        //查询设定主键的类型信息
+        $sql = 'SELECT column_name as `name`,COLUMN_TYPE as type FROM information_schema.columns 
+          WHERE table_name=\''.config('database.prefix').self::$data['table_name'].'\'  ';
+
+        $field = [];
+        foreach(self::$old_field as $k => $v){
+            array_push($field ,$v['name']);
+        }
+
 
         $sql = 'ALTER TABLE `'.$table.'` ';
 
         foreach($info as $k => $v){
             $set = json_decode($v['setting'] ,true);
-            $sql .= 'DROP COLUMN `'.$set['field']['name'].'`,';
+            //只有字段存在的情况的下，才会删除
+            if(in_array($set['field']['name'],$field)){
+                $sql .= 'DROP COLUMN `'.$set['field']['name'].'`,';
+            }
         }
 
         $sql = rtrim($sql,',');
@@ -782,7 +817,7 @@ class SqlBuilder extends MvcBuilder
             Db::execute($sql);
             return true;
         }catch (Exception $e ){
-            self::$error = $e->getMessage();
+            self::$error = 'del_field error_msg:'.$e->getMessage();
             return false;
         }
     }

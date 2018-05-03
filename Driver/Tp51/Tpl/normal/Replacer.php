@@ -147,7 +147,8 @@ class Replacer extends CommonReplacer
         $component = '';
         foreach($models['component'] as $k => $v){
             $setting = json_decode($v['setting'] ,true);
-
+            //跳过不作为编辑选项的组件
+            if(isset($setting['notinform']) && $setting['notinform'] == 'on') continue;
 
             $component .= '{:CMaker(\''.$v['component_name'].'\')';
 
@@ -248,8 +249,9 @@ EOT;
 
         $component = '';
         foreach($models['component'] as $k => $v){
-
             $setting = json_decode($v['setting'] ,true);
+            //跳过不作为编辑选项的组件
+            if(isset($setting['notinform']) && $setting['notinform'] == 'on') continue;
 
             $component .= '{:CMaker(\''.$v['component_name'].'\')';
 
@@ -374,8 +376,7 @@ EOT;
                     break;
                 case 'radio':
                     $option = json_encode(self::splitOptionValue($setting['base']['option']));
-                    p($option);
-                    die();
+
                     $funcStr .= <<<EOT
     //获取器 值得转化
     public function get{$FieldName}Attr(\$value)

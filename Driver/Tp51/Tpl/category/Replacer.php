@@ -158,7 +158,7 @@ class Replacer extends CommonReplacer
         $component = '';
         foreach($models['component'] as $k => $v){
             $setting = json_decode($v['setting'] ,true);
-
+            if(isset($setting['notinform']) && $setting['notinform'] == 'on') continue;
 
             $component .= '{:CMaker(\''.$v['component_name'].'\')';
 
@@ -219,8 +219,8 @@ EOT;
 
         $component = '';
         foreach($models['component'] as $k => $v){
-
             $setting = json_decode($v['setting'] ,true);
+            if(isset($setting['notinform']) && $setting['notinform'] == 'on') continue;
 
             $component .= '{:CMaker(\''.$v['component_name'].'\')';
 
@@ -228,8 +228,6 @@ EOT;
             if(!isset($ComponentsStatusAttr[$v['component_name']]))throw new Exception($v['component_name'].' 未设置statusAttr属性');
 
             $attr = $ComponentsStatusAttr[$v['component_name']];
-
-
 
             foreach($setting['base'] as $sk => $sv){
                 //当$sk == 设定的attr 的时候 跳过，避免重复

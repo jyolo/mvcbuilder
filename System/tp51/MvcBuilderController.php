@@ -145,12 +145,18 @@ class MvcBuilderController extends Controller{
 
         $setting = json_decode(cache($setting) , true);
 
+        //是否在form表单中
+        $this->assign('notinform' ,(isset($setting['notinform']) && $setting['notinform'] == 'on') ? 'checked' : '');
         //是否在table中
         $this->assign('intable' ,(isset($setting['intable']) && $setting['intable'] == 'on') ? 'checked' : '');
         //是否在搜索的选项中
         $this->assign('insearch' ,(isset($setting['insearch']) && $setting['insearch'] == 'on') ? 'checked' : '');
+        //是否是批量操作
+        $this->assign('isbatch' ,(isset($setting['isbatch']) && $setting['isbatch'] == 'on') ? 'checked' : '');
+
         //设置的dom
         $this->assign('setting' ,$setting_dom);
+        $this->assign('component_name' ,$param['component_name']);
 
         return $this->fetch(__DIR__ . '/view/get_model_form.html');
 

@@ -17,14 +17,29 @@
             <form action="{$setting['url']}" method="post" class="layui-form" lay-filter="component_setting">
                 <!--固定设置值-->
                 <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 99px;">不作为编辑选项</label>
+                    <div class="layui-input-inline" style="width: 50px;">
+                        <input type="checkbox" name="notinform" lay-skin="switch" lay-text="是|否" {notinform} >
+                    </div>
                     <label class="layui-form-label">表格中显示</label>
                     <div class="layui-input-inline" style="width: 50px;">
                         <input type="checkbox" name="intable" lay-skin="switch" lay-text="是|否" {$intable}>
                     </div>
                     <label class="layui-form-label" style="width: 90px;">作为搜索选项</label>
-                    <div class="layui-input-inline" >
+                    <div class="layui-input-inline" style="width: 50px;">
                         <input type="checkbox" name="insearch" lay-skin="switch" lay-text="是|否" {$insearch}>
                     </div>
+
+                    {if $component_name == 'switchs'}
+                    <label class="layui-form-label" style="width: 90px;">是否批量操作</label>
+                    <div class="layui-input-inline" style="width: 50px;">
+                        <input type="checkbox" name="isbatch" lay-skin="switch" lay-text="是|否" {$isbatch}>
+                    </div>
+                    <!--<div class="layui-input-inline" style="width: 150px;">-->
+                        <!--<input type="text" class="layui-input" name="batch_name" value="" placeholder="批量操作名称">-->
+                    <!--</div>-->
+
+                    {/if}
                 </div>
 
 
