@@ -5,7 +5,7 @@
 
 2：导入mvcbuilder.sql
 
-3：复制 Static 静态文件 到项目的根目录 
+3：复制 static 静态文件 到项目的根目录 
 
 4：在当前框架添加对应的路由映射到System对应的框架目录里面的 controller
 
