@@ -140,7 +140,6 @@ class CmakerSettingMap
                 'text' => '是|否',
             ],
 
-
         ],
         'ueditor' => [
             'show' => [
