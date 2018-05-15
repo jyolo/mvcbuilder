@@ -138,22 +138,29 @@
             drake.on('drop',function (el, target, source) {
 
                 if(source != this.containers[0]){
-
                     var component_name = $(el).attr('component-name');
                     var oldid = $(el).find('.'+component_name).attr('id');
-
 
                     //重新渲染组件
                     reload_component_render($(el),component_name,oldid);
 
 
                     //统一修改表单的显示形式为inline
-                    if(component_name != 'ueditor'){
-                        $(el).find('.layui-input-block').addClass('layui-input-inline').removeClass('layui-input-block');
+                    if(component_name == 'ueditor'){
+                        p($(el).find('.edui-default').css('width','auto'));
+
                     }
+                    //$(el).find('.layui-input-block').addClass('layui-input-inline').removeClass('layui-input-block');
+
+                    var left = $(el).wrap('<div class="layui-row"><div class="layui-col-md10"></div>');
+                    left.parent().after('<div class="layui-col-md2" style="text-align: right">' +
+                        '<div class="layui-input-inline">' +
+                        '<a style="float:right" href="javascript:;" onclick="showsetting(this)"  class="layui-btn" >' +
+                        '<i class="fa fa-edit"></i>编辑</a></div></div></div>')
+
 
                     //添加编辑按钮
-                    $(el).append('<div class="layui-input-inline"><a style="float:right" href="javascript:;" onclick="showsetting(this)"  class="layui-btn" ><i class="fa fa-edit"></i>编辑</a></div>');
+                   // $(el).append('<div class="layui-input-inline"><a style="float:right" href="javascript:;" onclick="showsetting(this)"  class="layui-btn" ><i class="fa fa-edit"></i>编辑</a></div>');
                     $(el).append('<input type="hidden" class="__form_order" name="form_order[]" value="">');
                     $(el).append('<input type="hidden" class="__component_name" name="component_name[]" value="'+component_name+'">');
 
@@ -163,7 +170,7 @@
 
                 //每次拖拽改变form-order hidden 的index值
                 $(this.containers[0]).find('.layui-form-item').each(function(i,n){
-                    $(n).find('input[type=hidden]').each(function(si,sn){
+                    $(n).parents('.layui-row').find('input[type=hidden]').each(function(si,sn){
                         var newname = $(sn).attr('name').replace(/\[\d?\]/,'['+i+']');
                         $(sn).attr('name',newname);
                         if(newname.match(/form_order/)){
@@ -172,10 +179,6 @@
                     });
 
                 });
-
-
-
-
 
             });
             //删除组件的时候也同时改变form-order hidden 的index值
@@ -200,9 +203,9 @@
     function showsetting(el){
         var requseturl = '{:url("mvcbuilder/get_model_form")}';
 
-        var type = $(el).parents('.layui-form-item').find('.__component_name').attr('value')
-            ,order = $(el).parents('.layui-form-item').find('.__form_order').attr('value')
-            ,setting = $(el).parents('.layui-form-item').find('.__setting').attr('value');
+        var type = $(el).parents('.layui-row').find('.__component_name').attr('value')
+            ,order = $(el).parents('.layui-row').find('.__form_order').attr('value')
+            ,setting = $(el).parents('.layui-row').find('.__setting').attr('value');
 
 
         if(typeof  setting != 'undefined'){

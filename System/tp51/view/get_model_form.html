@@ -125,6 +125,7 @@
             componnet_item.append(msg.data['html']);
             //复制设置选项
             var input_hidden_copy = componnet_item.find('input[type=hidden]').clone();
+
             //添加新的组件
             componnet_item.after(msg.data['new_component']);
             //移除旧的组件
@@ -133,9 +134,9 @@
 
             //新生成的组件后面追加编辑按钮 以及设置信息
             var newel = drake0.find('.layui-form-item').eq(msg.data['form_order']);
-            newel.append('<div class="layui-input-inline"><a style="float:right" href="javascript:;" onclick="showsetting(this)"  class="layui-btn" ><i class="fa fa-edit"></i>编辑</a></div>')
-                .append(input_hidden_copy);
-
+           // newel.append('<div class="layui-input-inline"><a style="float:right" href="javascript:;" onclick="showsetting(this)"  class="layui-btn" ><i class="fa fa-edit"></i>编辑</a></div>')
+           //     .append(input_hidden_copy);
+            newel.append(input_hidden_copy);
 
             //右边区域获取组件原始的id (组件渲染的组件需要有 组件名称的class )
             // if(drake1.find('.'+component_type).length > 1){

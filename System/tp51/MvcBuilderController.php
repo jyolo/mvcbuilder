@@ -74,12 +74,12 @@ class MvcBuilderController extends Controller{
 
         $fields = self::$models_component->order('sorts asc')->where('models_id',$models['id'])->select()->toArray();
 
-        $componet = '';
 
+        $componet = '';
         foreach($fields as $k => $v){
 
             $set = json_decode($v['setting'] ,true);
-
+            $componet .= '<div class="layui-row"><div class="layui-col-md10" >';
             //根据组件的设置组装组件
             $obj = Maker::build($v['component_name']);
             foreach($set['base'] as $sk => $sv){
@@ -88,16 +88,7 @@ class MvcBuilderController extends Controller{
             }
             $componet .= $obj->render();
 
-//            $str = '{:CMaker('.$v['component_name'].')';
-//            foreach($set['base'] as $sk => $sv){
-//                $str .= '->'.$sk.'("'.$sv.'")';
-//            }
-//            $str .= '->render()}';
-//            $componet .= $str."\r\n";
 
-
-            $componet .= '<div class="layui-input-inline" style="display: none"><a style="float:right" href="javascript:;" onclick="showsetting(this)" class="layui-btn"><i class="fa fa-edit"></i>编辑</a></div>';
-            $componet .= '<div class="hidden_list" style="display: none">';
             $componet .= Maker::build('hidden')->classname('__component_id')->name('component_id['.$k.']')->value($v['id'])->render();
             $componet .= Maker::build('hidden')->classname('__form_order')->name('form_order['.$k.']')->value($k)->render();
             $componet .= Maker::build('hidden')->classname('__component_name')->name('component_name['.$k.']')->value($v['component_name'])->render();
@@ -107,7 +98,9 @@ class MvcBuilderController extends Controller{
             cache($setting_key ,$v['setting'],86400);
             $componet .= Maker::build('hidden')->classname('__setting')->name('setting['.$k.']')->value($setting_key)->render();
             $componet .= '</div>';
-
+            $componet .= '<div class="layui-col-md2" style="text-align: right;">';
+            $componet .= '<div class="layui-input-inline" ><a style="float:right" href="javascript:;" onclick="showsetting(this)" class="layui-btn"><i class="fa fa-edit"></i>编辑</a></div>';
+            $componet .= '</div></div>';
         }
 
 

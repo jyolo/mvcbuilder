@@ -249,7 +249,7 @@ class MvcBuilderHelper extends CmakerSettingMap
         if($choose)$choose = join(',',$choose);
 
         $str = Maker::build('checkbox')
-            ->label('layui验证规则')
+            ->label('前端验证规则')
             ->option($layui_verify)
             ->choose($choose)
             ->helpinfo('可以多选')
