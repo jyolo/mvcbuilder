@@ -23,7 +23,8 @@
         
 5：开始访问 http:://域名/index.php/mvcbuilder/index 开始使用  
 
-注意： 注意:如果访问返回的是字符串，修改 config/app.php 配置文件  default_return_type => 'html'
+目前只适配thinkphp5.1。后期会考虑为laravel yii ci 等框架适配。
+注意： 如果访问返回的是字符串，修改 config/app.php 配置文件  default_return_type => 'html'
 
 文档地址：https://www.kancloud.cn/jyolo/atcmf/626651 （持续完善中...）
 
