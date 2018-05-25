@@ -1,6 +1,4 @@
-
-
-SET FOREIGN_KEY_CHECKS=0;
+﻿SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
 -- Table structure for `jy_models_component`
