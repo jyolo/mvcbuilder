@@ -21,7 +21,6 @@ function _parseWhere($postWhere){
 
                 //范围选择 两个值都为true  between
                 if(strlen($sv[0]) && strlen($sv[1])){
-
                     $where[$k] = [$sk,[$sv[0] ,$sv[1]] ];
                 }
 
@@ -37,15 +36,22 @@ function _parseWhere($postWhere){
             });
 
 
-        }else{ //非数组的形式 where[admin_name]
+        }
+        else
+        { //非数组的形式 where[admin_name]
+
             if(strlen($v)){
                 //如果是自动生成的path 字段则左右两侧加上逗号
                 //tp5.1.7 表达式修改过，上面方法失效
                 //$where[] = ['' ,'EXP' ,'instr('.$k.',\''.$v.'\')'];
 
-                $where[] = ['' ,'EXP' ,\think\Db::raw('instr('.$k.',\''.$v.'\')')];
+                if(strpos($k ,'id')){ //匹配到id 则 用 = 号
+                    $where[] = [$k ,'=' ,$v];
+                }else{
+                    $where[] = ['' ,'EXP' ,\think\Db::raw('instr('.$k.',\''.$v.'\')')];
+                }
 
-                //$where[] = [''.$k.'' ,'like' ,'%'.$v.'%'];
+
             }
         }
 

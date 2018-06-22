@@ -184,7 +184,7 @@ class CmakerSettingMap
             'showtype' =>[ //展现形式
                 'component' => 'select',
                 'label' => '展现形式',
-                'option' => 'select-下拉选择|radio-单选|checkbox-复选框|treeSelect-多层级下拉选择',
+                'option' => 'select-下拉选择|searchselect-带搜索下拉选择|radio-单选|checkbox-复选框|treeSelect-多层级下拉选择',
                 'layVerify' => 'required',
             ],
 
@@ -284,7 +284,7 @@ class CmakerSettingMap
 
     //每个组件所用设置组件的 值 显示的属性
     public static $setComponentsStatusAttr = [
-        'text|number|textarea|password|hidden|ueditor|webuploader|linkselect' => 'value',
+        'text|number|textarea|password|hidden|ueditor|webuploader|linkselect|datepicker' => 'value',
         'switchs' => 'open',
         'select|radio|checkbox|relation' => 'choose',
     ];
