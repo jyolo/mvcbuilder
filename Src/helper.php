@@ -17,22 +17,48 @@ function _parseWhere($postWhere){
 
         if(is_array($v)){ //数组的形式 where[open_time][between time][]
 
+
+
             array_walk($v,function($sv ,$sk)use($k,$v,&$where){
 
-                //范围选择 两个值都为true  between
-                if(strlen($sv[0]) && strlen($sv[1])){
-                    $where[$k] = [$sk,[$sv[0] ,$sv[1]] ];
+//                p($v);
+
+                /**
+                 * 区间设置格式如下 where[finish_time][range][-]
+                 * array(1) {
+                        ["range"]=>
+                            array(1) {
+                            ["-"]=>
+                                string(23) "2018-06-01 - 2018-07-31"
+                            }
+                     }
+                 */
+                if(key($v) == 'range'){
+                    $timerange  =  $v[key($v)];
+                    $rang_char =  key($timerange);
+                    $time  = $timerange[$rang_char];
+                    $time_arr = explode($rang_char,$time);
+                    array_push($where,[$k ,'>=' ,trim($time_arr[0])]);
+                    array_push($where,[$k ,'<=' ,trim($time_arr[1])]);
+
+                }else{
+                    //范围选择 两个值都为true  between
+                    if(strlen($sv[0]) && strlen($sv[1])){
+                        $where[$k] = [$sk,[$sv[0] ,$sv[1]] ];
+                    }
+                    //范围选择 第一个值为true  > 大于
+                    if(strlen($sv[0]) && !strlen($sv[1])){
+                        $where[$k] = ['>',$sv[0] ];
+                    }
+                    //范围选择 第二个值为true  < 小于
+                    if(!strlen($sv[0]) && strlen($sv[1])){
+                        $where[$k] = ['<',$sv[1] ];
+                    }
+
                 }
 
 
-                //范围选择 第一个值为true  > 大于
-                if(strlen($sv[0]) && !strlen($sv[1])){
-                    $where[$k] = ['>',$sv[0] ];
-                }
-                //范围选择 第二个值为true  < 小于
-                if(!strlen($sv[0]) && strlen($sv[1])){
-                    $where[$k] = ['<',$sv[1] ];
-                }
+
             });
 
 
