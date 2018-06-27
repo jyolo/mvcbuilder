@@ -41,8 +41,7 @@ class ContentBuilder extends MvcBuilder
         $content = file_get_contents($tplFile);
 
         $content = str_replace($replacer['find'],$replacer['replace'],$content);
-//        p($content);
-//        die();
+
         return $content;
     }
 
@@ -55,9 +54,10 @@ class ContentBuilder extends MvcBuilder
         $func = new \ReflectionClass(self::$_instance);
         $classPath = $func->getFileName();
 
-        $arr = explode('\\',$classPath);
+
+        $arr = explode(DIRECTORY_SEPARATOR,$classPath);
         array_pop($arr);
-        $path = join('\\' ,$arr).DIRECTORY_SEPARATOR.'Tpl';
+        $path = join(DIRECTORY_SEPARATOR ,$arr).DIRECTORY_SEPARATOR.'Tpl';
 
         if(!file_exists($path)) throw new \Exception($path.'不存在');
 
@@ -77,7 +77,7 @@ class ContentBuilder extends MvcBuilder
 
         $handlerRootNameSpace = join('\\',$arr);
 
-        $Replacer = $handlerRootNameSpace.DIRECTORY_SEPARATOR.'Tpl'.DIRECTORY_SEPARATOR.self::$info['tpl_plan'].DIRECTORY_SEPARATOR.'Replacer';
+        $Replacer = $handlerRootNameSpace.'\Tpl\\'.self::$info['tpl_plan'].'\Replacer';
 
         if(!class_exists($Replacer))throw new \Exception($Replacer.' ,replacer不存在');
 

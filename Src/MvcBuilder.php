@@ -87,7 +87,8 @@ class MvcBuilder
         {
             $self = get_class();
             $driver_called = explode('\\',$self)[0].'\Driver\\'.$driver_name.'\Handler';
-            $tpl_path = str_replace('\Src','',__DIR__) .'\Driver\\'.$driver_name.'\Tpl';
+            $tpl_path = __DIR__ .'/../'.DIRECTORY_SEPARATOR.'Driver'.DIRECTORY_SEPARATOR. $driver_name . DIRECTORY_SEPARATOR .'Tpl';
+            
             $handler = new $driver_called;
 
             if(!file_exists($tpl_path))throw new \Exception($tpl_path .'不存在');

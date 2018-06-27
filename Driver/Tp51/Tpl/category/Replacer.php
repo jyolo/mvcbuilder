@@ -10,7 +10,7 @@ namespace MvcBuilder\Driver\tp51\Tpl\category;
 use CMaker\components\checkbox;
 use CMaker\Maker;
 use MvcBuilder\ComponentSettingMap;
-use MvcBuilder\Driver\tp51\CommonReplacer;
+use MvcBuilder\Driver\Tp51\CommonReplacer;
 use think\Exception;
 
 class Replacer extends CommonReplacer

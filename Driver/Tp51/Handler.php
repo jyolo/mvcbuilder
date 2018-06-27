@@ -125,6 +125,7 @@ class Handler extends Driver
     public function buildFile($foldermap)
     {
         try{
+
             $module_path = $this->config['app_path'].self::$data['file_name'];
             //新的模块不存在的情况下 新建文件夹
             if(!file_exists($module_path))mkdir($module_path);
