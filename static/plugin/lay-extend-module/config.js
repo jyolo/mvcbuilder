@@ -28,6 +28,26 @@ layui.config({
 function p(s){
     console.log(s);
 }
+// 弹出的子窗口页面 重载 父级页面iframe 里面的table
+function refresh_parent_iframe_table(refresh_self = false){
+    if(refresh_self == true)window.location.reload();
+    
+    var self_parent_iframe = parent.document.getElementsByClassName('layui-show');
+    var self_parent_window = self_parent_iframe[0].childNodes[0].contentWindow;
+    var self_parent_component = [];
+
+    window.layui.$.each(self_parent_window.component_set,function (i,n) {
+        if(n.component_name == 'table') self_parent_component.push(n);
+    });
+
+    var self_parent_table_id = self_parent_component[0].uniqid_id;
+    self_parent_window.layui.table.reload(self_parent_table_id);
+
+
+}
+
+
+
 
 //layer 加载页面
 function layer_loadPage(el ,callback ){

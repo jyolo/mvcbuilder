@@ -23,6 +23,7 @@ layui.define(['table','tableExtend'],function (exports) {
 
 
 
+
     var handler = {
 
         post:function(el){
@@ -85,153 +86,188 @@ layui.define(['table','tableExtend'],function (exports) {
             //先unbind 防止提交多次
             $(this).parents('form').unbind('submit').bind('submit',function(){
 
-                var form = $(this) ,url;
+                try{
 
-                //提交按钮的 data-url  优先级 高于 form 的 action
-                if($(button).attr('data-url')){
-                    url = $(button).attr('data-url');
-                }else{
-                    url = form.attr('action');
-                }
-                var method = form.attr('method') ? form.attr('method') : 'post';
-                var data = form.serialize();
+                    var form = $(this) ,url;
+
+                    //提交按钮的 data-url  优先级 高于 form 的 action
+                    if($(button).attr('data-url')){
+                        url = $(button).attr('data-url');
+                    }else{
+                        url = form.attr('action');
+                    }
+                    var method = form.attr('method') ? form.attr('method') : 'post';
+                    var data = form.serialize();
 
 
-                /*
-                 * 搜索重载table start
-                 * 指定提交事件类型
-                 * table-index 表格的索引 0 开始
-                 * 按钮实例 example : <button class="layui-btn" lay-submit data-type="search_reload_table" table-index="0">搜索</button>
-                 * */
+                    /*
+                     * 搜索重载table start
+                     * 指定提交事件类型
+                     * table-index 表格的索引 0 开始
+                     * 按钮实例 example : <button class="layui-btn" lay-submit data-type="search_reload_table" table-index="0">搜索</button>
+                     * */
 
-                var type = $(button).attr('data-type');
-                if(type == 'search_reload_table'){
+                    var type = $(button).attr('data-type');
                     var component_table = [];
                     //根据组件的设置 ,找出table
                     $.each(window.component_set ,function(i,n){
                         if(n.component_name == 'table'){
-                            //component_table.push(n)
                             component_table.push(n);
                         }
                     });
-
-                    //p(component_table);
-
                     var table_index = $(button).attr('table-index');
-                   // p(table_index);
 
-                    var serializeObj={};
-                    var array=form.serializeArray();
-                    //表单的数字解析成对象
-                    $(array).each(function(){
-                        if(serializeObj[this.name]){
-                            if($.isArray(serializeObj[this.name])){
-                                serializeObj[this.name].push(this.value);
-                            }else{
-                                serializeObj[this.name]=[serializeObj[this.name],this.value];
-                            }
-                        }else{
-                            serializeObj[this.name]=this.value;
-                        }
-                    });
+                    var table_id = (typeof table_index == 'undefined') ? '' : component_table[table_index].uniqid_id;
 
-                    var table_id = component_table[table_index].uniqid_id;
-                   // p(url);
-                    table.reload(table_id, {
-                        url: url
-                        ,where: serializeObj //设定异步数据接口的额外参数
-                        ,page:1
-                        //,done:tableExtend.tableDone
-                    });
+                    /****** 搜索重载 start ****************/
+                    if(type == 'search_reload_table'){
 
-                    return false;
-                }
-
-                /****** 搜索重载 end ****************/
-
-
-                //检查是否有定义回调
-                var callback = $(button).attr('data-call-back') ? $(button).attr('data-call-back') : false ;
-                var error_callback = $(button).attr('data-error-call-back') ? $(button).attr('data-error-call-back') : false ;
-
-                var table_index = $(button).attr('table_index');
-
-                var loder;
-                $.ajax({
-                    type:method,
-                    url: url,
-                    data:data,
-                    dataType:'json',
-                    beforeSend:function(){
-                        loder = layer.load(3);
-                    },
-                    complete:function () {
-                        layer.close(loder);
-                    },
-                    success:function(msg){
-                        //如果返回的是str 直接返回
-                        if(typeof msg == 'string')return ;
-
-                        if(msg.code == 0){//失败
-                            parent.layer.msg(msg.msg, {
-                                icon:5,
-                                time: 1600 ,
-                                shade: 0.5
-                            },function(){
-                                if(error_callback !== false){
-                                    var functionname = new Function("return "+error_callback)();
-                                    if(typeof functionname == 'function'){
-                                        functionname(msg);
-                                    }
-                                    return;
+                        var serializeObj={};
+                        var array=form.serializeArray();
+                        //表单的数字解析成对象
+                        $(array).each(function(){
+                            if(serializeObj[this.name]){
+                                if($.isArray(serializeObj[this.name])){
+                                    serializeObj[this.name].push(this.value);
+                                }else{
+                                    serializeObj[this.name]=[serializeObj[this.name],this.value];
                                 }
-                                return ;
-                            });
-                        }
-                        else
-                        { //成功
+                            }else{
+                                serializeObj[this.name]=this.value;
+                            }
+                        });
 
-                            parent.layer.msg(msg.msg ? msg.msg : '操作成功', {
-                                icon:6,
-                                time: 1600 ,
-                                shade: 0.5
-                            },function () {
-                                //如果有自定义回调函数 优先执行 回调函数
-                                if(callback !== false){
-                                    //如果是定义在外部的function ,则直接调用外部函数
-                                    var functionname = new Function("return "+callback)();
-                                    if(typeof functionname == 'function'){
 
-                                        if(table_index) msg.table_index = table_index;
+                       // p(url);
+                        table.reload(table_id, {
+                            url: url
+                            ,where: serializeObj //设定异步数据接口的额外参数
+                            ,page:1
+                            //,done:tableExtend.tableDone
+                        });
 
-                                        functionname(msg);
+                        return false;
+                    }
+                    /****** 搜索重载 end ****************/
+
+                    /****** 添加重载 start ****************/
+                    if(type == 'add_reload_table'){
+
+                        $.ajax({
+                            type: method,
+                            url: url,
+                            data: data,
+                            dataType: 'json',
+                            beforeSend: function () {
+                                loder = layer.load(3);
+                            },
+                            complete: function () {
+                                layer.close(loder);
+                            },
+                            success:function (msg) {
+                                $('.btn-reset').trigger('click');
+                                if($('.searchSelect').length >= 1){
+                                    $('.searchSelect').find('option').remove();
+                                }
+                                table.reload(table_id);
+                            }
+                        });
+
+
+                        return false;
+                    }
+                    /****** 添加重载 end ****************/
+
+
+                    //检查是否有定义回调
+                    var callback = $(button).attr('data-call-back') ? $(button).attr('data-call-back') : false ;
+                    var error_callback = $(button).attr('data-error-call-back') ? $(button).attr('data-error-call-back') : false ;
+
+                    var table_index = $(button).attr('table_index');
+
+                    //如果定义了 data-url="false" 则直接返回。
+                    if(url == 'false') return false;
+
+
+                    var loder;
+                    $.ajax({
+                        type:method,
+                        url: url,
+                        data:data,
+                        dataType:'json',
+                        beforeSend:function(){
+                            loder = layer.load(3);
+                        },
+                        complete:function () {
+                            layer.close(loder);
+                        },
+                        success:function(msg){
+
+                            //如果返回的是str 直接返回
+                            if(typeof msg == 'string')return ;
+
+                            if(msg.code == 0){//失败
+                                parent.layer.msg(msg.msg, {
+                                    icon:5,
+                                    time: 1600 ,
+                                    shade: 0.5
+                                },function(){
+                                    if(error_callback !== false){
+                                        var functionname = new Function("return "+error_callback)();
+                                        if(typeof functionname == 'function'){
+                                            functionname(msg);
+                                        }
                                     }
                                     return ;
-                                }
+                                });
+                            }
+                            else
+                            { //成功
 
-                                //如果全局的listTable 不为 undefined 则自动 reload
-                                if(typeof parent.listTable != 'undefined'){
-                                    parent.listTable.msg = msg;
-                                }else{
-                                    //单独单开iframe
-                                    parent.table.msg = msg
-                                }
+                                parent.layer.msg(msg.msg ? msg.msg : '操作成功', {
+                                    icon:6,
+                                    time: 1600 ,
+                                    shade: 0.5
+                                },function () {
+                                    //如果有自定义回调函数 优先执行 回调函数
+                                    if(callback !== false){
+                                        //如果是定义在外部的function ,则直接调用外部函数
+                                        var functionname = new Function("return "+callback)();
+                                        if(typeof functionname == 'function'){
+                                            if(table_index) msg.table_index = table_index;
+                                            functionname(msg);
+                                        }
+                                        return ;
+                                    }
 
-                               //关闭所有的弹窗
-                               parent.layer.closeAll();
+                                    //如果全局的listTable 不为 undefined 则自动 reload
+                                    if(typeof parent.listTable != 'undefined'){
+                                        parent.listTable.msg = msg;
+                                    }else{
+                                        //单独单开iframe
+                                        parent.table.msg = msg
+                                    }
 
-                                //如果传递了连接 则完成后跳转
-                                if(msg.url){
-                                    window.location.href = msg.url;
-                                    return;
-                                }
+                                   //关闭所有的弹窗
+                                   parent.layer.closeAll();
 
-                            });
+                                    //如果传递了连接 则完成后跳转
+                                    if(msg.url){
+                                        window.location.href = msg.url;
+                                        return;
+                                    }
+
+                                });
+                            }
+
                         }
+                    });
 
-                    }
-                });
 
+                }catch (e) {
+                    p(e);
+
+                }
 
 
                 return false;
@@ -254,8 +290,6 @@ layui.define(['table','tableExtend'],function (exports) {
             })
 
             var type = $(this).attr('data-type');
-
-
 
             //没有定义任何类型的 连接则默认是 分页连接
             if(typeof type == 'undefined'){
