@@ -161,31 +161,39 @@ layui.define(['table'],function (exports) {
 
                                     //删除成功的时候 删掉当前行
                                     if(msg.code == 1){
+                                        var component_table = [];
+                                        //根据组件的设置 ,找出table
+                                        $.each(window.component_set ,function(i,n){
+                                            if(n.component_name == 'table'){
+                                                //component_table.push(n)
+                                                component_table.push(n);
+                                            }
+                                        });
                                         //根据确认类型 执行不同的操作
                                         switch (confirm_type){
                                             case 'del':
+
                                                 //删除最后一条的时候 table 进行 reload
                                                 if(obj.tr.siblings().length == 0){
 
-                                                    var component_table = [];
-                                                    //根据组件的设置 ,找出table
-                                                    $.each(window.component_set ,function(i,n){
-                                                        if(n.component_name == 'table'){
-                                                            //component_table.push(n)
-                                                            component_table.push(n);
-                                                        }
-                                                    });
                                                     //前面iframe里面只有一个table的时候
                                                     if(component_table.length == 1){
                                                         var table_id = component_table[0].uniqid_id;
                                                         table.reload(table_id);
                                                     }else{
-                                                        //多个的时候 暂未处理
+                                                        //多个的时候 action_tpl 并且需要在按钮上门 指定 table-index 这个参数指定 table的 索引
+                                                        var table_id = component_table[ button.attr('table-index') ].uniqid_id;
+                                                        table.reload(table_id);
                                                     }
 
                                                 }else{
                                                     obj.del();
                                                 }
+                                                break;
+                                            case 'edit':
+                                                //多个的时候 action_tpl 并且需要在按钮上门 指定 table-index 这个参数指定 table的 索引
+                                                var table_id = component_table[ button.attr('table-index') ].uniqid_id;
+                                                table.reload(table_id);
                                                 break;
                                         }
 
