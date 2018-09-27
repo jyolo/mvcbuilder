@@ -12,47 +12,48 @@
  */
 function _parseWhere($postWhere){
     $where = [];
+    $whereType = ['=','<','>','<>','!='];
+    $whereExpType = ['instr','find_in_set'];
 
     foreach($postWhere as $k => $v){
 
-        if(is_array($v)){ //数组的形式 where[open_time][between time][]
+        if(is_array($v)){ //数组的形式 where[field][=]
+            $type = key($v);
 
-            array_walk($v,function($sv ,$sk)use($k,$v,&$where){
+            if(strlen($v[$type]) == 0) continue;
 
-                //范围选择 两个值都为true  between
-                if(strlen($sv[0]) && strlen($sv[1])){
-                    $where[$k] = [$sk,[$sv[0] ,$sv[1]] ];
-                }
-
-
-                //范围选择 第一个值为true  > 大于
-                if(strlen($sv[0]) && !strlen($sv[1])){
-                    $where[$k] = ['>',$sv[0] ];
-                }
-                //范围选择 第二个值为true  < 小于
-                if(!strlen($sv[0]) && strlen($sv[1])){
-                    $where[$k] = ['<',$sv[1] ];
-                }
-            });
-
-
-        }
-        else
-        { //非数组的形式 where[admin_name]
-
-            if(strlen($v)){
-                //如果是自动生成的path 字段则左右两侧加上逗号
-                //tp5.1.7 表达式修改过，上面方法失效
-                //$where[] = ['' ,'EXP' ,'instr('.$k.',\''.$v.'\')'];
-
-                if(strpos($k ,'id')){ //匹配到id 则 用 = 号
-                    $where[] = [$k ,'=' ,$v];
-                }else{
-                    $where[] = ['' ,'EXP' ,\think\Db::raw('instr('.$k.',\''.$v.'\')')];
-                }
-
-
+            if(in_array($type ,$whereType)){
+                $where[] = [$k ,$type ,$v[$type]];
             }
+
+           if(in_array($type ,$whereExpType)){
+               switch ($type){
+                   case 'instr':
+                       $where[] = ['' ,'EXP' ,\think\Db::raw('instr('.$k.',\''.$v[$type].'\')')];
+                       break;
+                   case 'find_in_set':
+                       $where[] = ['' ,'EXP' ,\think\Db::raw('find_in_set(\''.$v[$type].'\',\''.$k.'\')')];
+                       break;
+               }
+
+           }
+
+        }else { //非数组的形式 where[admin_name] 默认使用模糊搜索
+            if(strlen($v) == 0) continue;
+            //时间区间 处理时间
+            if (strpos($v, '~') !== false) {
+                $timeArr = explode('~', $v);
+                $timeArr[0] = trim($timeArr[0]);
+                $timeArr[1] = trim($timeArr[1]);
+                if($timeArr[0] == $timeArr[1]){
+                    $timeArr[1] = str_replace('00:00:00','23:59:59',$timeArr[1]);
+                }
+                $where[] = [$k, 'between', [$timeArr[0], $timeArr[1]]];
+            } elseif (strlen($v)) {
+                //如果是自动生成的path 字段则左右两侧加上逗号
+                $where[] = ['' ,'EXP' ,\think\Db::raw('instr('.$k.',\''.$v.'\')')];
+            }
+
         }
 
 
