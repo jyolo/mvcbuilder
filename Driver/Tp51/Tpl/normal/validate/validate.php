@@ -1,5 +1,5 @@
 <?php
-namespace app\_module_name_\validate;
+namespace __app_namespace__\_module_name_\validate;
 use think\Validate;
 /**
  * _models_zh_name_ 验证器

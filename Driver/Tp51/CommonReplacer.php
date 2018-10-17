@@ -8,6 +8,7 @@ namespace MvcBuilder\Driver\Tp51;
 
 
 use MvcBuilder\CmakerSettingMap;
+use think\App;
 use think\Db;
 
 class CommonReplacer extends CmakerSettingMap
@@ -27,6 +28,12 @@ class CommonReplacer extends CmakerSettingMap
 //        }
 
     }
+
+    public static function __app_namespace__($models,$module){
+        $namespace = App::get('app')->getNamespace();
+        return $namespace;
+    }
+
 
     public static function _models_zh_name_($models){
         return ucfirst($models['models_name']);

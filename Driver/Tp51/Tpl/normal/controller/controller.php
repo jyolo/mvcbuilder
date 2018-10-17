@@ -6,10 +6,10 @@
  * Time: 20:13
  */
 
-namespace app\_module_name_\controller;
+namespace __app_namespace__\_module_name_\controller;
 
-use app\base\controller\Common;
-use app\_module_name_\model;
+use __app_namespace__\base\controller\Common;
+use __app_namespace__\_module_name_\model;
 use think\facade\Request;
 use think\Db;
 
