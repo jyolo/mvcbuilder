@@ -1,5 +1,5 @@
 <?php
-namespace app\_module_name_\model;
+namespace __app_namespace__\_module_name_\model;
 use think\Model;
 use think\Db;
 /**
