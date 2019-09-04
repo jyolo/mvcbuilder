@@ -4,15 +4,15 @@ layui.define(['table'],function (exports) {
 
 
     var handler = {
-        /**
-         *
-         */
+
         tableID:'',
-        /**
-         *
-         */
+
         _checkbox:function(obj){
-            var tableID = handler.tableID;
+            // var tableID = handler.tableID;
+            // fix 获取不到tableid 问题
+            var tableID  = obj.tr.prevObject.prevObject.attr('lay-id')
+            // fix 多个表格 选中之后 checkbox 找不到当前form的问题
+            var parentForm = obj.tr.prevObject.prevObject.parents('form')
 
             //如果触发的是全选，则为：all，如果触发的是单选，则为：one
             switch(obj.type){
@@ -24,12 +24,12 @@ layui.define(['table'],function (exports) {
                             var hidden = '<input type="hidden" id="'+filter+'" value="'+n.id+'" name="ids[]">';
                             if(n.LAY_CHECKED == true){
                                 //避免重复的元素，先删除遗留的元素
-                                $('.layui-btn[lay-submit]').parents('form').find('#'+filter).remove();
+                                $(parentForm).find('.layui-btn[lay-submit]').parents('form').find('#'+filter).remove();
 
-                                $('.layui-btn[lay-submit]').parents('form').append(hidden);
+                                $(parentForm).find('.layui-btn[lay-submit]').parents('form').append(hidden);
                             }else{
 
-                                $('.layui-btn[lay-submit]').parents('form').find('#'+filter).remove();
+                                $(parentForm).find('.layui-btn[lay-submit]').parents('form').find('#'+filter).remove();
                             }
                         }
 
@@ -40,9 +40,9 @@ layui.define(['table'],function (exports) {
                     var filter = 'checked_'+obj.data.id;
                     var hidden = '<input type="hidden" id="'+filter+'" value="'+obj.data.id+'" name="ids[]">';
                     if(obj.checked){
-                        $('.layui-btn[lay-submit]').parents('form').append(hidden);
+                        $(parentForm).find('.layui-btn[lay-submit]').parents('form').append(hidden);
                     }else{
-                        $('.layui-btn[lay-submit]').parents('form').find('#'+filter).remove();
+                        $(parentForm).find('.layui-btn[lay-submit]').parents('form').find('#'+filter).remove();
                     }
                     break;
             }
@@ -96,6 +96,7 @@ layui.define(['table'],function (exports) {
 
                 }
             }
+
 
 
 
@@ -161,39 +162,31 @@ layui.define(['table'],function (exports) {
 
                                     //删除成功的时候 删掉当前行
                                     if(msg.code == 1){
-                                        var component_table = [];
-                                        //根据组件的设置 ,找出table
-                                        $.each(window.component_set ,function(i,n){
-                                            if(n.component_name == 'table'){
-                                                //component_table.push(n)
-                                                component_table.push(n);
-                                            }
-                                        });
                                         //根据确认类型 执行不同的操作
                                         switch (confirm_type){
                                             case 'del':
-
                                                 //删除最后一条的时候 table 进行 reload
                                                 if(obj.tr.siblings().length == 0){
 
+                                                    var component_table = [];
+                                                    //根据组件的设置 ,找出table
+                                                    $.each(window.component_set ,function(i,n){
+                                                        if(n.component_name == 'table'){
+                                                            //component_table.push(n)
+                                                            component_table.push(n);
+                                                        }
+                                                    });
                                                     //前面iframe里面只有一个table的时候
                                                     if(component_table.length == 1){
                                                         var table_id = component_table[0].uniqid_id;
                                                         table.reload(table_id);
                                                     }else{
-                                                        //多个的时候 action_tpl 并且需要在按钮上门 指定 table-index 这个参数指定 table的 索引
-                                                        var table_id = component_table[ button.attr('table-index') ].uniqid_id;
-                                                        table.reload(table_id);
+                                                        //多个的时候 暂未处理
                                                     }
 
                                                 }else{
                                                     obj.del();
                                                 }
-                                                break;
-                                            case 'edit':
-                                                //多个的时候 action_tpl 并且需要在按钮上门 指定 table-index 这个参数指定 table的 索引
-                                                var table_id = component_table[ button.attr('table-index') ].uniqid_id;
-                                                table.reload(table_id);
                                                 break;
                                         }
 
@@ -224,9 +217,38 @@ layui.define(['table'],function (exports) {
                     }
                     else
                     {
+                        $.ajax({
+                            url: url,
+                            method:'post',
+                            data:data,
+                            success: function (msg) {
 
+                                //操作成功的时候
+                                if(msg.code == 1){
+                                    var icon = 6;
+
+                                }else{
+                                    var icon = 5;
+
+                                }
+                                //关闭loading
+                                parent.layer.close(parent.layer.index);
+                                //弹出提示
+                                parent.layer.msg(msg.msg, {
+                                    icon:icon,
+                                    time: 1200 ,
+                                    shade: 0.5
+                                });
+
+
+                            }
+                        });
                     }
 
+                    var _callback = new Function('return '+$(this).attr('data-call-back'))();
+                    if(typeof _callback == 'function'){
+                        _callback();
+                    }
 
                     break;
 
