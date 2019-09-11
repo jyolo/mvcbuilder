@@ -20,7 +20,7 @@ class _models_en_name_ extends Model
             if($data['_relation_field_'] == 0 || $data['_relation_field_'] == null) return '0,';
             $parent_path = $this->where('_primary_name_', $data['_relation_field_'])->value('path');
             $parent_path = trim($parent_path ,',');
-            return $parent_path.','.$data['_relation_field_'] .',' ;
+            return $parent_path.','.$data['_relation_field_']  ;
 
     }
 
@@ -33,7 +33,7 @@ class _models_en_name_ extends Model
 
         $all_update_data = [];
         $son = $this->field('_primary_name_,path')
-            ->where('','exp','instr(path,",'.$post['_primary_name_'].',")')
+            ->where('','exp','find_in_set(",'.$post['_primary_name_'].',",path)')
             ->select()->toArray();
 
         //组装子元素要更新的数据

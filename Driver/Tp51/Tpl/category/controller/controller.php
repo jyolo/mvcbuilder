@@ -45,7 +45,7 @@ class _models_en_name_ extends Common
                     ? $post['where'][$relation_field[1]] : false;
 
                 if($pid){
-                    $model = $model->where('','exp','instr(path ,"'.$pid.'")');
+                    $model = $model->where('','exp','find_in_set("'.$pid.'",path )');
                     unset($post['where'][$relation_field[1]]);
                 }
                 $where = _parseWhere($post['where']);
