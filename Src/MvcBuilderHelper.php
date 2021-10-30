@@ -95,7 +95,7 @@ class MvcBuilderHelper extends CmakerSettingMap
         $common_map = self::$common_map;
 
         //如果有设置选项
-        if($this->setting['base']){
+        if($this->setting && $this->setting['base']){
 
             foreach($this->setting['base'] as $k => $v){
                 //根据设置选项 动态的改变 公共组件设置的 值
